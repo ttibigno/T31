@@ -1,1 +1,8 @@
-.DS_Store
+# MacOS folder attributes file
+**/.DS_Store
+
+# dotenv environmental variables file
+.env
+
+# Dependency directories
+node_modules/

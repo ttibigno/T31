@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: "AroundYou OpenAPi 3.0.0"
+  description: API for managing AroundYou requests
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Localhost
+paths:
+  /activities:
+    get:
+      description: Get the activites from the system.
+      summary: Get all the activities.
+      responses:
+        '200':
+          description: 'Collection of activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+      
+
+components:
+  schemas:
+    Activity:
+      type: object
+      required:
+        - name
+        - topic
+        - place
+        - date
+      properties:
+        name:
+          type: string
+          description: 'Name of the activity'
+        topic:
+          type: array
+        place:
+          type: string
+        date:
+          type: number
+        crator:
+          type: object
+        maxSlot:
+          type: integer
+        remainingSlots:
+          type: integer
+        contacts:
+          type: array
