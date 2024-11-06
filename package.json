@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "search.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "load": "node ./scripts/loadDB.js",
+    "clear": "node ./scripts/clearDB.js"
   },
   "author": "",
   "license": "ISC",

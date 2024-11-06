@@ -1,0 +1,22 @@
+var mongoose = require('mongoose');
+require('dotenv').config();
+var Activity = require('../app/model/activity');
+
+
+mongoose.connect(process.env.database, {
+    serverSelectionTimeoutMS: 5000
+  })
+.catch( error => {throw(error)}
+)
+.then( async () => {
+    console.log("Connected to MongoDB");
+
+    console.log("Clearing activities..")
+    await Activity.deleteMany()
+    .exec()
+    .catch( error => {throw(error)})
+    .then( () => {
+        console.log("Done.");
+    })
+    process.exit(0);
+})
