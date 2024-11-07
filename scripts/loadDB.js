@@ -17,7 +17,7 @@ mongoose.connect(process.env.database, {
         .then( () => {
         var act1 = new Activity({
             id: '0000-0000-0000-0001',
-            name: "Act 1",
+            name: "Ping Pong Povo",
             topic: [("Sport"), ("New")],
             place: "Povo1",
             // https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-date-time-string-format
@@ -34,7 +34,7 @@ mongoose.connect(process.env.database, {
     }).then( () => {
         var act2 = new Activity({
             id: '0378-0501-6082-0002',
-            name: "Act 2",
+            name: "FabLab",
             topic: [("Art")],
             place: "Povo2",
             date: Date("2024-09-25T09:45:00.000+02:00"),
@@ -49,10 +49,10 @@ mongoose.connect(process.env.database, {
     }).then( () => {
         var act2 = new Activity({
             id: '8194-5729-3916-0003',
-            name: "Act 3",
-            topic: [("Debate"), ("University")],
-            place: "Povo0",
-            date: Date("2024-11-11T15:15:00.000+02:00"),
+            name: "AperiPovo",
+            topic: [("University"), ("New")],
+            place: "Povo1",
+            date: Date("2024-11-08T17:15:00.000+02:00"),
             creator: "server",
             maxSlot: 4,
             remainingSlots: 4,
