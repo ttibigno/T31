@@ -34,5 +34,36 @@ router.get('/:id', async (req, res) => {
     res.end();
 });
 
+
+router.post('', async (req, res) => {
+    try {
+        const newActivity = new Activity({
+            name: req.body.name,
+            topic: req.body.topic,
+            place: req.body.place,
+            date: req.body.date,
+            creator: req.body.creator,
+            maxSlot: req.body.maxSlot,
+            remainingSlots: req.body.remainingSlots,
+            contacts: req.body.contacts
+        });
+        const savedActivity = await newActivity.save();  //questo per aspettare che i dati si salvino sul database
+
+        res.status(201).json({
+            self: '/api/v1/activities/' + savedActivity.id,
+            name: savedActivity.name,
+            topic: savedActivity.topic,
+            place: savedActivity.place,
+            date: savedActivity.date,
+            creator: savedActivity.creator,
+            maxSlot: savedActivity.maxSlot,
+            remainingSlots: savedActivity.remainingSlots,
+            contacts: savedActivity.contacts
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Errore durante la creazione dell\'attività' });
+    }
+});
 // returning the Router() module to app.js
 module.exports = router;

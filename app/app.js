@@ -14,7 +14,7 @@ app.use(
     next()
     }
 )
-
+app.use(express.json());
 // Routing
 app.use('/api/v1/activities', activities);
 
