@@ -2,7 +2,7 @@ const Activity = require('./model/activity')
 const express = require('express');
 // https://expressjs.com/en/5x/api.html#router
 const router = express.Router();
-
+const { authenticateToken }= require('./auth');
 
 router.use((req, res, next) => {
     console.log(`routing to /activities${req.url}`)
@@ -63,14 +63,15 @@ router.get('/:query', async (req, res) => {
 });
 
 
-router.post('', async (req, res) => {
+router.post('',authenticateToken , async (req, res) => {
+    const creator=req.user.username;
     try {
         const newActivity = new Activity({
             name: req.body.name,
             topic: req.body.topic,
             place: req.body.place,
             date: req.body.date,
-            creator: req.body.creator,
+            creator: creator,  //il creatore è per forza quello che fa la richiesta
             maxSlot: req.body.maxSlot,
             remainingSlots: req.body.remainingSlots,
             contacts: req.body.contacts
@@ -90,7 +91,7 @@ router.post('', async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Errore durante la creazione dell\'attività' });
+        res.status(500).json({ message: 'Errore durante la creazione' });
     }
 });
 // returning the Router() module to app.js

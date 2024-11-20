@@ -4,8 +4,8 @@ const express = require('express');
 const app = express();
 
 // external Router() module "activities"
-const activities = require('./activities')
-
+const activityRoutes = require('./activities')
+const authRoutes = require('./auth').router;
 app.use(
     // REQ: https://expressjs.com/en/5x/api.html#req
     // RES: https://expressjs.com/en/5x/api.html#res
@@ -16,7 +16,7 @@ app.use(
 )
 app.use(express.json());
 // Routing
-app.use('/api/v1/activities', activities);
-
+app.use('/api/v1/activities', activityRoutes);
+app.use('/api/v1/auth', authRoutes);
 // returning the express app module to index.js
 module.exports = app;
