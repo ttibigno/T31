@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 // https://mongoosejs.com/docs/guide.html#schemas
 
 // Temporary Schema built with current API
-module.exports = mongoose.model('Activity', new Schema({
+module.exports = mongoose.model('Activities', new Schema({
     "id": String,
     "name": String,
     "topic": [String],
