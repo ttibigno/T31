@@ -5,13 +5,13 @@ var Schema = mongoose.Schema;
 
 // Temporary Schema built with current API
 module.exports = mongoose.model('Activities', new Schema({
-    "id": String,
-    "name": String,
-    "topic": [String],
-    "place": String,
-    "date": Date, // https://mongoosejs.com/docs/schematypes.html#dates
-    "creator": Object,
-    "maxSlot": Number,
+    "name": { type: String, required: true },
+    "topic": { type: [String], required: true },
+    "place": { type: String, required: true },
+    "date": { type: Date, required: true }, // https://mongoosejs.com/docs/schematypes.html#dates
+    "creator": { type: String, required: true },
+    "maxSlot": { type: Number, required: true },
     "remainingSlots": Number,
-    "contacts": []
+    "contacts": [String],
+    "warnings": { type: Number, default: 0 }
 }))

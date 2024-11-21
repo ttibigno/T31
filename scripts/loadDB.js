@@ -16,7 +16,6 @@ mongoose.connect(process.env.database, {
     await Activity.deleteMany()
         .then( () => {
         var act1 = new Activity({
-            id: '0000-0000-0000-0001',
             name: "Ping Pong Povo",
             topic: [("Sport"), ("New")],
             place: "Povo1",
@@ -33,7 +32,6 @@ mongoose.connect(process.env.database, {
         console.log("Created act1")
     }).then( () => {
         var act2 = new Activity({
-            id: '0378-0501-6082-0002',
             name: "FabLab",
             topic: [("Art")],
             place: "Povo2",
@@ -48,7 +46,6 @@ mongoose.connect(process.env.database, {
         console.log("Created act2")
     }).then( () => {
         var act2 = new Activity({
-            id: '8194-5729-3916-0003',
             name: "AperiPovo",
             topic: [("University"), ("New")],
             place: "Povo1",

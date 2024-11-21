@@ -1,5 +1,6 @@
 const Activity = require('./model/activity')
 const express = require('express');
+var mongoose = require('mongoose');
 // https://expressjs.com/en/5x/api.html#router
 const router = express.Router();
 const { authenticateToken }= require('./auth');
@@ -15,7 +16,7 @@ router.get('', async (req, res) => {
     let activities = await Activity.find({}).lean()
     activities = activities.map( (activity) => {
         return {
-            id: activity.id,
+            id: activity._id,
             name: activity.name,
             topic: activity.topic,
             place: activity.place,
@@ -24,6 +25,7 @@ router.get('', async (req, res) => {
             maxSlot: activity.maxSlot,
             remainingSlots: activity.remainingSlots,
             contacts: activity.contacts,
+            warnings: activity.warnings
         }
     })
     res.status(200).json(activities);
@@ -32,10 +34,13 @@ router.get('', async (req, res) => {
 // GET a list of Activities by ID, Name, Topic, Place and Creator
 router.get('/:query', async (req, res) => {
 
-
+    try{
+        var id = new mongoose.Types.ObjectId(req.params.query)
+    }
+    catch{}
     let activities = await Activity.find({
         $or: [
-            {id : req.params.query},
+            { _id : id},
             // https://www.mongodb.com/docs/manual/reference/operator/query/regex/
             // https://www.mongodb.com/docs/manual/reference/operator/query/regex/#mongodb-query-op.-options
             { name : { $regex: '.*' + req.params.query + '.*', $options: "i" }},
@@ -56,7 +61,8 @@ router.get('/:query', async (req, res) => {
             creator: activity.creator,
             maxSlot: activity.maxSlot,
             remainingSlots: activity.remainingSlots,
-            contacts: activity.contacts
+            contacts: activity.contacts,
+            warnings: activity.warnings
         }})
     res.status(200).json(activities);
     res.end();
