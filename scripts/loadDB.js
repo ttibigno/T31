@@ -3,7 +3,7 @@ require('dotenv').config();
 var Activity = require('../app/model/activity');
 
 
-mongoose.connect(process.env.database, {
+mongoose.connect(process.env.cloudDatabase, {
     serverSelectionTimeoutMS: 5000
   })
 .catch( error => {throw(error)}

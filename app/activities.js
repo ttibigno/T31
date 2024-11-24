@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 // https://expressjs.com/en/5x/api.html#router
 const router = express.Router();
 const { authenticateToken }= require('./auth');
-
+const {verifyAdmin } = require('./auth');
 router.use((req, res, next) => {
     console.log(`routing to /activities${req.url}`)
     next()
@@ -98,6 +98,20 @@ router.post('',authenticateToken , async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Errore durante la creazione' });
+    }
+});
+
+router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
+    const activityId= req.params.id;
+    try{
+        const deletedActivity = await Activity.findByIdAndDelete(activityId);
+        if (!deletedActivity) {
+            return res.status(404).json({ message: 'Attività non trovata' });
+        }
+
+        res.status(200).json({ message: 'Attività eliminata con successo' });
+    }  catch(error){
+        res.status(500).json({ message: 'Errore durante l\'eliminazione dell\'attività' });
     }
 });
 // returning the Router() module to app.js
