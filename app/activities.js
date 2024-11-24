@@ -111,7 +111,7 @@ router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
 
         res.status(200).json({ message: 'Attività eliminata con successo' });
     }  catch(error){
-        res.status(500).json({ message: 'Errore durante l\'eliminazione dell\'attività' });
+        res.status(500).json({ message: 'Errore durante eliminazione attività' });
     }
 });
 // returning the Router() module to app.js
