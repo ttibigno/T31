@@ -13,5 +13,7 @@ module.exports = mongoose.model('Activities', new Schema({
     "maxSlot": { type: Number, required: true },
     "remainingSlots": Number,
     "contacts": [String],
-    "warnings": { type: Number, default: 0 }
+    "warnings": { type: Number, default: 0 },
+    "joinedUserIds": [mongoose.Types.ObjectId]
+    // aggiungere flag ended?
 }))

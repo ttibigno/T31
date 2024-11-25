@@ -69,7 +69,7 @@ router.get('/:query', async (req, res) => {
 });
 
 
-router.post('',authenticateToken , async (req, res) => {
+router.post('', authenticateToken , async (req, res) => {
     const creator=req.user.username;
     try {
         const newActivity = new Activity({
