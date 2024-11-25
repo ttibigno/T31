@@ -65,7 +65,7 @@ router.post('/login', async(req,res) => {
     }
 });
 
-//questo è un middleware da aggiungere tra gli argomenti di ogni endpoint che vogliamo proteggere
+//middleware da aggiungere tra gli argomenti di ogni endpoint che vogliamo proteggere
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -79,7 +79,7 @@ function authenticateToken(req, res, next) {
     });
 }
 
-//questo middleqare da aggiungere agli endpoint che sono accessibili solo dall'admin
+// middleware da aggiungere agli endpoint che sono accessibili solo dall'admin
 function verifyAdmin(req,res,next){
     if(req.user.role !== 'admin'){
         return res.status(403).json({message: 'Accesso riservato agli admin'});
