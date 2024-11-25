@@ -7,11 +7,11 @@ info:
     name: MIT
 servers:
   - url: http://localhost:8000/api/v1
-    description: Localhost
+    description: Backend
 paths:
   /activities:
     get:
-      description: Get the activites from the system.
+      description: Get the activities from the system.
       summary: Get all the activities.
       responses:
         '200':
@@ -22,8 +22,82 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Activity'
-      
-
+    post:
+      description: Post an activity
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Activity"
+      responses:
+        '201':
+          description: 'Activity posted'
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '500':
+          description: 'Error on creation'
+  /activities/{query}:
+    get:
+      description: Search a list of activities with a keyword
+      responses:
+        '200':
+          description: 'Collection of activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+  /login:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username: 
+                  type: string
+                password: 
+                  type: string
+      responses:
+        '200':
+          description: 'Authentication Token'
+          content:
+            application/json:
+              schema:
+                type: string
+                example: authenticateToken
+        '403':
+          description: 'Wrong Credentials'
+        '500':
+          description: 'Error on login'
+  /register:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '201':
+          description: 'User registered'
+        '400':
+          description: 'Input Error'
+        '500':
+          description: 'Error during the creation of the User'
 components:
   schemas:
     Activity:
@@ -33,21 +107,57 @@ components:
         - topic
         - place
         - date
+        - creator
+        - maxSlot
       properties:
         name:
           type: string
           description: 'Name of the activity'
         topic:
           type: array
+          description: 'Topics of the activity'
         place:
           type: string
+          description: 'Place of the activity'
         date:
-          type: number
+          type: string
+          description: 'Date of the activity'
         crator:
-          type: object
+          type: string
+          description: 'Username of the creator of the activity'
         maxSlot:
           type: integer
+          description: 'Number of total free slots of the activity'
         remainingSlots:
           type: integer
+          description: 'Number of free slots of an activity'
         contacts:
           type: array
+          description: 'Links to external sites for contacting the creator of the activity'
+        warnings:
+          type: integer
+          description: 'Number of warnings of the activity'
+    User:
+      type: object
+      required:
+        - name
+        - surname
+        - email
+        - username
+        - password
+      properties:
+        name:
+          type: string
+          description: "Name of the user"
+        surname:
+          type: string
+          description: "Surname of the user"
+        email:
+          type: string
+          description: "Mail of the user"
+        username:
+          type: string
+          description: "Username of the user"
+        password:
+          type: string
+          description: "Hashed password of the user"

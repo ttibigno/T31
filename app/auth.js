@@ -50,7 +50,7 @@ router.post('/login', async(req,res) => {
         }
 
         const token = jwt.sign({ id: user._id, username: user.username }, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '1h' });
-        res.json({ accessToken: token });
+        res.status(200).json({ accessToken: token });
     } catch (err) {
         res.status(500).json({ message:'Errore durante il login', error: err });
     }
