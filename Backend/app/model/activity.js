@@ -14,6 +14,6 @@ module.exports = mongoose.model('Activities', new Schema({
     "remainingSlots": Number,
     "contacts": [String],
     "warnings": { type: Number, default: 0 },
-    "joinedUserIds": [mongoose.Types.ObjectId]
-    // aggiungere flag ended?
+    "joinedUserIds": [mongoose.Types.ObjectId],
+    "ended": {type: Boolean, default: false}
 }))
