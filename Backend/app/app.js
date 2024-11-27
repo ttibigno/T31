@@ -5,7 +5,7 @@ const app = express();
 
 // external Router() module "activities"
 const activityRoutes = require('./activities')
-const authRoutes = require('./auth').router;
+const authRoutes = require('./auth');
 const usersRoutes= require('./users');
 app.use(
     // REQ: https://expressjs.com/en/5x/api.html#req
