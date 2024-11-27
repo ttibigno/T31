@@ -26,20 +26,12 @@ router.get('', async (req, res) => {
 
 
 router.post('/register', async(req,res)=>{
-   const{name, surname, email, username, password, adminSecret} = req.body;
+   const{name, surname, email, username, password} = req.body;
    if (!name || !surname ||!email || !username || !password) {
     return res.status(400).json({ message: 'Tutti i campi sono obbligatori!' });
     }
     try {
         let role= 'user';
-        if(adminSecret){
-            if(adminSecret === process.env.ADMIN_SECRET){
-                role='admin';
-            } 
-            else{
-                return res.status(403).json({ message: 'Token admin non valido'});
-            }
-        }
         const newUser = new User({ name, surname, email, username, password: await salt(password), role });
         await newUser.save();
         res.status(201).json({ message: `Utente registrato come ${role}` });
@@ -57,7 +49,7 @@ router.post('/login', async(req,res) => {
             return res.status(403).json({ message:'Credenziali non valide' });
         }
 
-        const token = jwt.sign({ id: user._id, username: user.username }, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id, username: user.username, role: user.role}, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '1h' });
         res.status(200).json({ accessToken: token });
 
     } catch (err) {

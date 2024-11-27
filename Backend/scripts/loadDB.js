@@ -61,7 +61,6 @@ mongoose.connect(process.env.database, {
     }).then( () => {
         console.log("Created act3")
     }).catch( error => {throw(error)})
-
     console.log("Clearing users..")
     await User.deleteMany()
     .then( async () => {

@@ -34,6 +34,23 @@ router.get('', async (req, res) => {
     res.status(200).json(activities);
 })
 
+//https://www.mongodb.com/community/forums/t/sorting-with-mongoose-and-mongodb/122573
+//https://mongoosejs.com/docs/tutorials/lean.html
+router.get('/monitor/',authenticateToken, verifyAdmin, async(req,res) => {
+    try{
+        let reportedActivities= await Activity.find({ warnings: { $gte: 1 }})
+        .sort({warnings:-1});
+
+        if(reportedActivities.length === 0) {
+            return res.status(205).json({message: 'Nessuna attività con seganalazioni'});
+        }
+        res.status(200).json(reportedActivities);
+    } catch (error){
+        res.status(500).json({message: 'Errore nel monitoraggio delle segnalazioni', error});
+    }
+});
+
+
 // GET a list of Activities by ID, Name, Topic, Place and Creator
 router.get('/:query', async (req, res) => {
 
@@ -104,6 +121,28 @@ router.post('', authenticateToken , async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Errore durante la creazione' });
     }
+});
+
+router.put('/report/:id', authenticateToken, async( req, res) => {
+    const activityId = req.params.id;
+     try{
+        const updatedActivity = await Activity.findByIdAndUpdate(
+            activityId,
+            { $inc: { warnings: 1 } },
+            {new : true}
+        );
+
+        if(!updatedActivity){
+            return res.status(404).json({message: 'Attività non trovata'});
+        }
+        res.status(200).json({
+            message: 'Segnalazione aggiunta con successo',
+            warnings: updatedActivity.reportCount
+        });
+    }  catch(error) {
+        res.status(500).json({message :'Errore durante la segnalazione'});
+    }
+
 });
 
 router.put('/join/:id', authenticateToken, async (req, res) => {
