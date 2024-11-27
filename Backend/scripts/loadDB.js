@@ -1,9 +1,11 @@
 var mongoose = require('mongoose');
 require('dotenv').config();
 var Activity = require('../app/model/activity');
+var User = require('../app/model/user');
+const salt = require('../app/security/salt');
 
 
-mongoose.connect(process.env.cloudDatabase, {
+mongoose.connect(process.env.database, {
     serverSelectionTimeoutMS: 5000
   })
 .catch( error => {throw(error)}
@@ -59,6 +61,21 @@ mongoose.connect(process.env.cloudDatabase, {
     }).then( () => {
         console.log("Created act3")
     }).catch( error => {throw(error)})
+
+    console.log("Clearing users..")
+    await User.deleteMany()
+    .then( async () => {
+        var usr1 = new User({
+            name: "usr1",
+            surname: "usr1",
+            username: "usr1",
+            email: "usr1@test.test",
+            password: await salt("password")
+        });
+        return usr1.save()
+    }).then( ()  => {
+        (console.log("Created usr1"));
+    })
     
     console.log("Done.");
     process.exit(0);

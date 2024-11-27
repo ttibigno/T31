@@ -1,10 +1,11 @@
 const Activity = require('./model/activity')
+const User = require('./model/user')
 const express = require('express');
 var mongoose = require('mongoose');
 // https://expressjs.com/en/5x/api.html#router
 const router = express.Router();
-const { authenticateToken }= require('./auth');
-const {verifyAdmin } = require('./auth');
+const { authenticateToken }= require('./security/verification');
+const {verifyAdmin } = require('./security/verification');
 router.use((req, res, next) => {
     console.log(`routing to /activities${req.url}`)
     next()
@@ -25,7 +26,9 @@ router.get('', async (req, res) => {
             maxSlot: activity.maxSlot,
             remainingSlots: activity.remainingSlots,
             contacts: activity.contacts,
-            warnings: activity.warnings
+            warnings: activity.warnings,
+            joinedUserIds: activity.joinedUserIds,
+            ended: activity.ended
         }
     })
     res.status(200).json(activities);
@@ -62,7 +65,9 @@ router.get('/:query', async (req, res) => {
             maxSlot: activity.maxSlot,
             remainingSlots: activity.remainingSlots,
             contacts: activity.contacts,
-            warnings: activity.warnings
+            warnings: activity.warnings,
+            joinedUserIds: activity.joinedUserIds,
+            ended: activity.ended
         }})
     res.status(200).json(activities);
     res.end();
@@ -70,7 +75,7 @@ router.get('/:query', async (req, res) => {
 
 
 router.post('', authenticateToken , async (req, res) => {
-    const creator=req.user.username;
+    const creator = req.user.username;
     try {
         const newActivity = new Activity({
             name: req.body.name,
@@ -79,7 +84,7 @@ router.post('', authenticateToken , async (req, res) => {
             date: req.body.date,
             creator: creator,  //il creatore è per forza quello che fa la richiesta
             maxSlot: req.body.maxSlot,
-            remainingSlots: req.body.remainingSlots,
+            remainingSlots: req.body.maxSlot, //gli slot rimanenti sono i maxSlot
             contacts: req.body.contacts
         });
         const savedActivity = await newActivity.save();  //questo per aspettare che i dati si salvino sul database
@@ -101,8 +106,32 @@ router.post('', authenticateToken , async (req, res) => {
     }
 });
 
+router.put('/join/:id', authenticateToken, async (req, res) => {
+    const userId = req.user.id;
+    console.log(userId);
+    try{
+        //https://mongoosejs.com/docs/tutorials/findoneandupdate.html
+        await Activity.findByIdAndUpdate(
+            req.params.id,
+            { $push : {joinedUserIds : userId}},
+            {new: true, runValidators: false } 
+        )
+        await User.findByIdAndUpdate(
+            req.user.id,
+            { $push : {regActivities : req.params.id}},
+            {new: true, runValidators: false } 
+        )
+
+        res.status(200).json({ message: 'ok'});
+
+    } catch(err){
+        res.status(500);
+        throw(err);
+    }
+})
+
 router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
-    const activityId= req.params.id;
+    const activityId = req.params.id;
     try{
         const deletedActivity = await Activity.findByIdAndDelete(activityId);
         if (!deletedActivity) {
