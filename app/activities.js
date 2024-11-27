@@ -38,7 +38,7 @@ router.get('/monitor/',authenticateToken, verifyAdmin, async(req,res) => {
     try{
         let reportedActivities= await Activity.find({ warnings: { $gte: 1 }})
         .sort({warnings:-1});
-        
+
         if(reportedActivities.length === 0) {
             return res.status(205).json({message: 'Nessuna attività con seganalazioni'});
         }
@@ -140,22 +140,6 @@ router.put('/report/:id', authenticateToken, async( req, res) => {
         res.status(500).json({message :'Errore durante la segnalazione'});
     }
 
-});
-
-//https://www.mongodb.com/community/forums/t/sorting-with-mongoose-and-mongodb/122573
-//https://mongoosejs.com/docs/tutorials/lean.html
-router.get('/monitor/' , async(req,res) => {
-    console.log('ahaha');
-    try{
-        let reportedActivities= await Activity.find({ warnings: { $gte: 1 }})
-        console.log('ban');
-        if(reportedActivities.length === 0) {
-            return res.status(205).json({message: 'Nessuna attività con seganalazioni'});
-        }
-        res.status(200).json('ciao');
-    } catch (error){
-        res.status(500).json({message: 'Errore nel monitoraggio delle segnalazioni', error});
-    }
 });
 
 router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
