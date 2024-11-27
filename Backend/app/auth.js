@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('./model/user');
 const router = express.Router();
-
+const salt = require("./security/salt")
 
 
 // ONLY FOR DEVELOPMENT REMOVE LATER
@@ -16,7 +16,9 @@ router.get('', async (req, res) => {
             surname: user.surname,
             username: user.username,
             email: user.email,
-            password: user.password
+            password: user.password,
+            regActivities: user.regActivities,
+            role: user.role
         }
     })
     res.status(200).json(users);
@@ -38,10 +40,7 @@ router.post('/register', async(req,res)=>{
                 return res.status(403).json({ message: 'Token admin non valido'});
             }
         }
-        
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = new User({ name, surname, email, username, password: hashedPassword, role });
+        const newUser = new User({ name, surname, email, username, password: await salt(password), role });
         await newUser.save();
         res.status(201).json({ message: `Utente registrato come ${role}` });
     } catch (err) {
@@ -63,29 +62,8 @@ router.post('/login', async(req,res) => {
 
     } catch (err) {
         res.status(500).json({ message:'Errore durante il login', error: err });
+        throw(err);
     }
 });
 
-//middleware da aggiungere tra gli argomenti di ogni endpoint che vogliamo proteggere
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token) return res.sendStatus(401);
-
-    jwt.verify(token, process.env.SECRET_ACCESS_TOKEN, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
-}
-
-// middleware da aggiungere agli endpoint che sono accessibili solo dall'admin
-function verifyAdmin(req,res,next){
-    if(req.user.role !== 'admin'){
-        return res.status(403).json({message: 'Accesso riservato agli admin'});
-    }
-    next();
-} 
-
-module.exports = { router, authenticateToken, verifyAdmin };
+module.exports = router;
