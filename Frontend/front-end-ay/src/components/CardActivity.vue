@@ -16,9 +16,9 @@
             ></div>
         </div>
         <div class="relative text-white px-10 pb-6 -mt-6 ">
-                <span class="block opacity-75 -mb-1">{{ activity.Creator }}</span>
+                <span class="block opacity-75 -mb-1">{{ activity.creator }}</span>
             <div class="flex justify-left">
-                <span class="block font-semibold text-xl">{{ activity.NameEvent }}</span>
+                <span class="block font-semibold text-xl">{{ activity.name }}</span>
             </div>
             <button class=" absolute inline-flex bottom-3.5 right-2 text-white-700 hover:text-white border border-white-700 hover:bg-white-800 focus:ring-4 focus:outline-none focus:ring-white-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-white-500 dark:text-white dark:hover:text-white dark:hover:bg-indigo-700 dark:focus:ring-white-900">save</button>
         </div>

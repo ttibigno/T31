@@ -39,7 +39,7 @@ export default {
         },
         async getActivities() {
             try {
-                const res = await fetch('activities.json');
+                const res = await fetch('http://localhost:8000/api/v1/activities');
                 const data = await res.json();
                 this.activities = data;
             } catch (error) {

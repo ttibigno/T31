@@ -24,7 +24,8 @@ export default {
     computed: {
         publishedCard() {
             // Filtro per eventi pubblicati
-            return this.activities.filter((a) => a.published);
+            /*return this.activities.filter((a) => a.published);*/
+            return this.activities;
         },
     },
 };
