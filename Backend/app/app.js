@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors')
 
 // https://expressjs.com/en/5x/api.html#app
 const app = express();
@@ -7,6 +8,9 @@ const app = express();
 const activityRoutes = require('./activities')
 const authRoutes = require('./auth');
 const usersRoutes= require('./users');
+
+app.use(cors())
+
 app.use(
     // REQ: https://expressjs.com/en/5x/api.html#req
     // RES: https://expressjs.com/en/5x/api.html#res
