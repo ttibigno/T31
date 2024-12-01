@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 const router = express.Router();
 const { authenticateToken }= require('./security/verification');
 const {verifyAdmin } = require('./security/verification');
+const userJoined = require('./security/checks');
 router.use((req, res, next) => {
     console.log(`routing to /activities${req.url}`)
     next()
@@ -28,7 +29,8 @@ router.get('', async (req, res) => {
             contacts: activity.contacts,
             warnings: activity.warnings,
             joinedUserIds: activity.joinedUserIds,
-            ended: activity.ended
+            ended: activity.ended,
+            reportUserIds: activity.reportUserIds //RIMUOVI DOPO
         }
     })
     res.status(200).json(activities);
@@ -124,6 +126,7 @@ router.post('', authenticateToken , async (req, res) => {
 });
 
 router.put('/report/:id', authenticateToken, async( req, res) => {
+    const userId = req.user.id;
     const activityId = req.params.id;
      try{
         const updatedActivity = await Activity.findByIdAndUpdate(
@@ -131,6 +134,11 @@ router.put('/report/:id', authenticateToken, async( req, res) => {
             { $inc: { warnings: 1 } },
             {new : true}
         );
+        await Activity.findByIdAndUpdate(
+            activityId,
+            { $push : {reportUserIds : userId}},
+            {new: true, runValidators: false } 
+        )
 
         if(!updatedActivity){
             return res.status(404).json({message: 'Attività non trovata'});
@@ -146,11 +154,21 @@ router.put('/report/:id', authenticateToken, async( req, res) => {
 });
 
 router.put('/join/:id', authenticateToken, async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        res.status(400);
+        res.end();
+    }
+    else {
+    if(await userJoined(req.user.id, req.params.id)) {
+        res.status(401);
+        res.end();
+    }
+    else {
     const userId = req.user.id;
-    console.log(userId);
     try{
+
         //https://mongoosejs.com/docs/tutorials/findoneandupdate.html
-        await Activity.findByIdAndUpdate(
+        var activity = await Activity.findByIdAndUpdate(
             req.params.id,
             { $push : {joinedUserIds : userId}},
             {new: true, runValidators: false } 
@@ -161,13 +179,15 @@ router.put('/join/:id', authenticateToken, async (req, res) => {
             {new: true, runValidators: false } 
         )
 
+        if (activity != undefined)
         res.status(200).json({ message: 'ok'});
-
+        else res.status(400)
+        
     } catch(err){
         res.status(500);
         throw(err);
     }
-})
+}}})
 
 router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
     const activityId = req.params.id;

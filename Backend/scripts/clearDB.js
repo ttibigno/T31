@@ -2,15 +2,27 @@ var mongoose = require('mongoose');
 require('dotenv').config();
 var Activity = require('../app/model/activity');
 var User = require('../app/model/user');
+var args = process.argv.slice(2);
 
+var database = new String();
+var databaseType = new String();
 
-mongoose.connect(process.env.database, {
+if (args == "cloud") {
+        database = process.env.cloudDatabase
+        databaseType = "MongoDB Atlas Cluster"
+}
+else {
+    database = process.env.database
+     databaseType = "MongoDB";
+}
+
+mongoose.connect(database, {
     serverSelectionTimeoutMS: 5000
   })
 .catch( error => {throw(error)}
 )
 .then( async () => {
-    console.log("Connected to MongoDB");
+    console.log("Connected to " + databaseType);
 
     console.log("Clearing activities..")
     await Activity.deleteMany()

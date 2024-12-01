@@ -4,14 +4,27 @@ var Activity = require('../app/model/activity');
 var User = require('../app/model/user');
 const salt = require('../app/security/salt');
 
+var args = process.argv.slice(2);
 
-mongoose.connect(process.env.database, {
+var database = new String();
+var databaseType = new String();
+
+if (args == "cloud") {
+        database = process.env.cloudDatabase
+        databaseType = "MongoDB Atlas Cluster"
+}
+else {
+    database = process.env.database
+     databaseType = "MongoDB";
+}
+
+mongoose.connect(database, {
     serverSelectionTimeoutMS: 5000
   })
 .catch( error => {throw(error)}
 )
 .then( async () => {
-    console.log("Connected to MongoDB");
+    console.log("Connected to " + databaseType);
 
     console.log("Deleting activities..")
     // https://mongoosejs.com/docs/api/model.html#Model.deleteMany()
@@ -26,7 +39,9 @@ mongoose.connect(process.env.database, {
             creator: "server",
             maxSlot: 10,
             remainingSlots: 10,
-            contacts: []
+            contacts: [],
+            joinedUserIds: [],
+            reportUserIds: []
         });
         // https://mongoosejs.com/docs/api/document.html#Document.prototype.save()
         return act1.save();
@@ -41,7 +56,9 @@ mongoose.connect(process.env.database, {
             creator: "server",
             maxSlot: 8,
             remainingSlots: 8,
-            contacts: []
+            contacts: [],
+            joinedUserIds: [],
+            reportUserIds: []
         });
         return act2.save();
     }).then( () => {
@@ -55,7 +72,9 @@ mongoose.connect(process.env.database, {
             creator: "server",
             maxSlot: 4,
             remainingSlots: 4,
-            contacts: []
+            contacts: [],
+            joinedUserIds: [],
+            reportUserIds: []
         });
         return act2.save();
     }).then( () => {

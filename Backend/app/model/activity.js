@@ -15,5 +15,6 @@ module.exports = mongoose.model('Activities', new Schema({
     "contacts": [String],
     "warnings": { type: Number, default: 0 },
     "joinedUserIds": [mongoose.Types.ObjectId],
+    "reportUserIds": [mongoose.Types.ObjectId],
     "ended": {type: Boolean, default: false}
 }))

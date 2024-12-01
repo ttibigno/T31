@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "search.js",
   "scripts": {
-    "cloudStart": "node index.js cloud",
-    "start": "node index.js local",
+    "start": "node index.js",
     "load": "node ./scripts/loadDB.js",
     "clear": "node ./scripts/clearDB.js"
   },

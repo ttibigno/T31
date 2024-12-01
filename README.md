@@ -3,11 +3,11 @@
 ## Setup
 For local testing use the script defined inside of `package.json`
 ```shell
-> npm run start
+> npm start local
 ```
 or, for testing with the Atlas server
 ```shell
-> npm run cloudStart
+> npm start cloud
 ```
 
 Create the `.env` file in the project root with a field of the database uri

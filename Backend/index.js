@@ -4,7 +4,7 @@ require('dotenv').config(); // .env file support for private KEYS
 // Usage: https://www.npmjs.com/package/dotenv#%EF%B8%8F-usage
 // Why: https://www.dotenv.org/docs/security/env
 var args = process.argv.slice(2);
-const port = process.env.port || 8080;
+const port = process.env.port || 3000;
 
 if(args == "local"){
 // app.locals: https://expressjs.com/en/5x/api.html#app.locals
