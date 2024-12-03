@@ -52,6 +52,18 @@ router.get('/monitor/',authenticateToken, verifyAdmin, async(req,res) => {
     }
 });
 
+router.get('/my', authenticateToken, async( req, res) => {
+    const creator = req.user.username;
+    try{
+    let activities = await Activity.find({creator : creator}).sort({date: -1}).lean();
+    if(activities.length === 0){
+        return res.status(205).json({message: 'Ancora nessuna attività creata'});
+    }
+    res.status(200).json(activities);
+} catch(error){
+    res.status(500).json({message: 'Errore nella restituzione delle attività create'});
+}
+});
 
 // GET a list of Activities by ID, Name, Topic, Place and Creator
 router.get('/:query', async (req, res) => {
