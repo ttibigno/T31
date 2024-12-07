@@ -4,17 +4,24 @@
         :active-page="activePage"
         :nav-link-click="(index) => activePage = index"
     />
-    <SideEvents :activities="activities" />
+
+    <router-view/>
+        <SideEvents
+            :activities="activities"
+        />
+
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue';
+import PageViewer from './components/PageViewer.vue';
 import SideEvents from './components/SideEvents.vue';
 
 export default {
     components: {
         Navbar,
-        SideEvents,
+        PageViewer,
+        SideEvents, 
     },
     created() {
         this.getPages();
