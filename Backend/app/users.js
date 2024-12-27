@@ -9,6 +9,7 @@ router.use((req, res, next) => {
     next();
 });
 
+//promuove un utente normale a ruolo di admin
 router.put('/promote/:id', authenticateToken, verifyAdmin, async(req,res) =>{
 
     const userId= req.params.id;
@@ -35,6 +36,7 @@ router.put('/promote/:id', authenticateToken, verifyAdmin, async(req,res) =>{
     }
 });
 
+//restituisce i dati privati dell'utente eccetto la sua password
 router.get('/private', authenticateToken, async(req, res) =>{
     try{
         const userId = req.user.id;
@@ -48,6 +50,7 @@ router.get('/private', authenticateToken, async(req, res) =>{
     }
 });
 
+//aggiorna campo email o username del profilo
 router.put('/private', authenticateToken, async (req, res) => {
     const {username, email} = req.body;
 
