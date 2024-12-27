@@ -9,6 +9,7 @@ router.use((req, res, next) => {
     next();
 });
 
+//promuove un utente normale a ruolo di admin
 router.put('/promote/:id', authenticateToken, verifyAdmin, async(req,res) =>{
 
     const userId= req.params.id;
@@ -35,6 +36,7 @@ router.put('/promote/:id', authenticateToken, verifyAdmin, async(req,res) =>{
     }
 });
 
+//restituisce i dati privati dell'utente eccetto la sua password
 router.get('/private', authenticateToken, async(req, res) =>{
     try{
         const userId = req.user.id;
@@ -48,5 +50,43 @@ router.get('/private', authenticateToken, async(req, res) =>{
     }
 });
 
+//aggiorna campo email o username del profilo
+router.put('/private', authenticateToken, async (req, res) => {
+    const {username, email} = req.body;
+
+    if (!username && !email) {
+      return res.status(400).json({ error: 'Nessun campo da modificare specificato' });
+    }
+  
+    try {
+      const userId = req.user.id;
+      const updateFields = {};
+      if (username) {
+        updateFields.username = username;
+      }
+      if (email) {
+        updateFields.email = email;
+      }
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { $set: updateFields },
+        { new: true, runValidators: true }
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ error: 'Utente non trovato.' });
+      }
+  
+      res.status(200).json({ message: 'Profilo aggiornato con successo.', user: updatedUser });
+    } catch (error) {
+    //errore di unicità : username e email devono essere unici
+    //https://www.mongodb.com/community/forums/t/e11000-duplicate-key-error-collection/14141
+      if (error.code === 11000) {
+        return res.status(400).json({ error: 'Username o email già in uso.' });
+      }
+      console.error(error);
+      res.status(500).json({ error:'Errore interno del server.' });
+    }
+  });
 
 module.exports = router;

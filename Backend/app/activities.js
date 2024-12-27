@@ -36,6 +36,8 @@ router.get('', async (req, res) => {
     res.status(200).json(activities);
 })
 
+
+//Restituisce all'admin le attività con più segnalazioni
 //https://www.mongodb.com/community/forums/t/sorting-with-mongoose-and-mongodb/122573
 //https://mongoosejs.com/docs/tutorials/lean.html
 router.get('/monitor/',authenticateToken, verifyAdmin, async(req,res) => {
@@ -52,6 +54,7 @@ router.get('/monitor/',authenticateToken, verifyAdmin, async(req,res) => {
     }
 });
 
+//restituisce le attività create dall'utente
 router.get('/my', authenticateToken, async( req, res) => {
     const creator = req.user.username;
     try{
@@ -104,7 +107,7 @@ router.get('/:query', async (req, res) => {
     res.end();
 });
 
-
+//Crea le proprie attività
 router.post('', authenticateToken , async (req, res) => {
     const creator = req.user.username;
     try {
@@ -137,6 +140,7 @@ router.post('', authenticateToken , async (req, res) => {
     }
 });
 
+// segnala un'attività
 router.put('/report/:id', authenticateToken, async( req, res) => {
     const userId = req.user.id;
     const activityId = req.params.id;
@@ -170,12 +174,9 @@ router.put('/report/:id', authenticateToken, async( req, res) => {
             }
         }
     }
-    else{
-        res.status(400);
-        res.end();
-    }
 });
 
+//partecipa a un'attività
 router.put('/join/:id', authenticateToken, async (req, res) => {
     if (await isIDValid(req.params.id)){
         if(await userJoined(req.user.id, req.params.id)) {
@@ -213,6 +214,7 @@ router.put('/join/:id', authenticateToken, async (req, res) => {
     }
 })
 
+//rimuovi un'attività (per operatore comunale)
 router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
     const activityId = req.params.id;
     if (await isIDValid(activityId)){
@@ -233,5 +235,33 @@ router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
         res.end();
     }
 });
+
+//modifica una delle attività create dall'utente
+router.put('/:id' , authenticateToken, async(req,res) => {
+    const activityId = req.params.id;
+    const updates = req.body;
+    const user= req.user.username;
+    try{
+        //non si può modificare il nome del creatore.
+        if (updates.creator) {
+            delete updates.creator;
+        }
+
+        const updatedActivity= await Activity.findOneAndUpdate(
+            {_id : activityId, creator:user },
+            updates,
+            {new :true, runValidators: true}
+        );
+
+        if(!updatedActivity){
+            return res.status(404).json({error: 'Attività non trovata o modifica non autorizzata'});
+        }
+        res.status(200).json(updatedActivity);
+    } catch(err){
+        console.error(err);
+        res.status(400).json({error: 'Errore durante aggiornamento'});
+    }
+});
+
 // returning the Router() module to app.js
 module.exports = router;
