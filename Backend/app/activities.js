@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 const router = express.Router();
 const { authenticateToken }= require('./security/verification');
 const {verifyAdmin } = require('./security/verification');
-const userJoined = require('./security/checks');
+const {userJoined, isIDValid, userReported} = require('./security/checks');
 router.use((req, res, next) => {
     console.log(`routing to /activities${req.url}`)
     next()
@@ -144,71 +144,81 @@ router.post('', authenticateToken , async (req, res) => {
 router.put('/report/:id', authenticateToken, async( req, res) => {
     const userId = req.user.id;
     const activityId = req.params.id;
-     try{
-        const updatedActivity = await Activity.findByIdAndUpdate(
-            activityId,
-            { $inc: { warnings: 1 } },
-            {new : true}
-        );
-        await Activity.findByIdAndUpdate(
-            activityId,
-            { $push : {reportUserIds : userId}},
-            {new: true, runValidators: false } 
-        )
-
-        if(!updatedActivity){
-            return res.status(404).json({message: 'Attività non trovata'});
+    if ( await isIDValid(userId)){
+        if(await userReported(req.user.id, req.params.id)) {
+            res.status(401);
+            res.end();
         }
-        res.status(200).json({
-            message: 'Segnalazione aggiunta con successo',
-            warnings: updatedActivity.reportCount
-        });
-    }  catch(error) {
-        res.status(500).json({message :'Errore durante la segnalazione'});
+        else {
+            try{
+                const updatedActivity = await Activity.findByIdAndUpdate(
+                    activityId,
+                    { $inc: { warnings: 1 } },
+                    {new : true}
+                );
+                await Activity.findByIdAndUpdate(
+                    activityId,
+                    { $push : {reportUserIds : userId}},
+                    {new: true, runValidators: false } 
+                )
+        
+                if(!updatedActivity){
+                    return res.status(404).json({message: 'Attività non trovata'});
+                }
+                res.status(200).json({
+                    message: 'Segnalazione aggiunta con successo',
+                    warnings: updatedActivity.reportCount
+                });
+            }  catch(error) {
+                res.status(500).json({message :'Errore durante la segnalazione'});
+            }
+        }
     }
-
 });
 
 //partecipa a un'attività
 router.put('/join/:id', authenticateToken, async (req, res) => {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    if (await isIDValid(req.params.id)){
+        if(await userJoined(req.user.id, req.params.id)) {
+            res.status(401);
+            res.end();
+        }
+        else {
+        const userId = req.user.id;
+        try{
+
+            //https://mongoosejs.com/docs/tutorials/findoneandupdate.html
+            var activity = await Activity.findByIdAndUpdate(
+                req.params.id,
+                { $push : {joinedUserIds : userId}},
+                {new: true, runValidators: false } 
+            )
+            await User.findByIdAndUpdate(
+                req.user.id,
+                { $push : {regActivities : req.params.id}},
+                {new: true, runValidators: false } 
+            )
+
+            if (activity != undefined)
+            res.status(200).json({ message: 'ok'});
+            else res.status(400)
+            
+        } catch(err){
+            res.status(500);
+            throw(err);
+        }
+}}
+    else {
         res.status(400);
         res.end();
     }
-    else {
-    if(await userJoined(req.user.id, req.params.id)) {
-        res.status(401);
-        res.end();
-    }
-    else {
-    const userId = req.user.id;
-    try{
-
-        //https://mongoosejs.com/docs/tutorials/findoneandupdate.html
-        var activity = await Activity.findByIdAndUpdate(
-            req.params.id,
-            { $push : {joinedUserIds : userId}},
-            {new: true, runValidators: false } 
-        )
-        await User.findByIdAndUpdate(
-            req.user.id,
-            { $push : {regActivities : req.params.id}},
-            {new: true, runValidators: false } 
-        )
-
-        if (activity != undefined)
-        res.status(200).json({ message: 'ok'});
-        else res.status(400)
-        
-    } catch(err){
-        res.status(500);
-        throw(err);
-    }
-}}})
+})
 
 //rimuovi un'attività (per operatore comunale)
 router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
     const activityId = req.params.id;
+    if (await isIDValid(activityId)){
+
     try{
         const deletedActivity = await Activity.findByIdAndDelete(activityId);
         if (!deletedActivity) {
@@ -218,6 +228,11 @@ router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
         res.status(200).json({ message: 'Attività eliminata con successo' });
     }  catch(error){
         res.status(500).json({message: 'Errore durante eliminazione attività'});
+    }
+    }
+    else {
+        res.status(400);
+        res.end();
     }
 });
 
