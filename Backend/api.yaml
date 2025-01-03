@@ -58,7 +58,61 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Activity'
-  /login:
+    delete:
+      description: 'Delete an activity'
+      responses:
+        '400': 
+          description: 'Activity id is not valid'
+        '404':
+          description: 'Activity not found'
+        '200':
+          description: 'Activity deleted succesfully'
+        '500':
+          description: 'Error during activity delete'
+  /activities/monitor/:
+    get:
+      description: Get a list of reported activities
+      responses:
+        '200':
+          description: 'Collection of activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '500':
+          description: 'Error on check'
+        '205': 
+          description: 'No activity found'
+  /activities/report/{id}:
+    put:
+      description: 'Report an activity'
+      responses:
+        '400': 
+          description: 'Activity id is not valid'
+        '401':
+          description: 'This activity is already reported by current User'
+        '404':
+          description: 'Activity not found'
+        '200':
+          description: 'Activity reported succesfully'
+        '500':
+          description: 'Error during report'
+  /activities/join/{id}:
+    put:
+      description: 'Join an activity'
+      responses:
+        '400':
+          description: 'Activity id is not valid'
+        '401': 
+          description: 'This activity is arleady joined by current User'
+        '200':
+          description: 'Activity joined succesfully'
+        '500':
+          description: 'Error on activity join'
+
+  /auth/login:
     post:
       requestBody:
         required: true
@@ -83,7 +137,7 @@ paths:
           description: 'Wrong Credentials'
         '500':
           description: 'Error on login'
-  /register:
+  /auth/register:
     post:
       requestBody:
         required: true
@@ -98,6 +152,21 @@ paths:
           description: 'Input Error'
         '500':
           description: 'Error during the creation of the User'
+  /users/promote/{id}:
+    put:
+      responses:
+        '200':
+          description: 'User promoted to admin succesfully'
+        '500':
+          description: 'Error during promotion'
+        '400':
+          description: 'User already is an admin'
+        '404':
+          description: 'User not found'
+
+
+
+  
 components:
   schemas:
     Activity:
