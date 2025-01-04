@@ -1,5 +1,6 @@
 <template>
-    <div class="p-8 flex flex-col items-left justify-left bg-zinc-100 space-y-4">
+    <div class="p-8 flex flex-wrap space-x-3 justify-evenly bg-zinc-100 space-y-4" v-if="showActivities">
+        <!-- CardActivity component with responsive layout -->
         <CardActivity 
             v-for="(activity, index) in publishedCard" 
             :key="index" 
@@ -22,11 +23,14 @@ export default {
         CardActivity,
     },
     computed: {
+        showActivities() {
+            return this.$route.path === '/0';
+        },
+
         publishedCard() {
-            // Filtro per eventi pubblicati
-            /*return this.activities.filter((a) => a.published);*/
-            return this.activities;
+            return this.showActivities ? this.activities : [];
         },
     },
 };
 </script>
+

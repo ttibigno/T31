@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-shrink-0 relative overflow-hidden bg-indigo-700 rounded-lg max-w-md shadow-lg h-30">
+    <div class="relative h-[26rem] w-[20rem] ml-2 bg-indigo-700 rounded-xl align-middle flex flex-col p-4 mt-4 group">
         <svg
             class="absolute bottom-0 left-0 mb-6"
             viewBox="0 0 375 283"
@@ -9,29 +9,107 @@
             <rect x="159.52" y="175" width="152" height="152" rx="8" transform="rotate(-45 159.52 175)" fill="white" />
             <rect y="107.48" width="152" height="152" rx="8" transform="rotate(-45 0 107.48)" fill="white" />
         </svg>
-        <div class="relative pt-10 px-10 flex items-center justify-center">
-            <div
-                class="block absolute w-48 h-48 bottom-0 left-0 -mb-24 ml-3"
-                style="background: radial-gradient(black, transparent 60%); transform: rotate3d(0, 0, 1, 20deg) scale3d(1, 0.6, 1); opacity: 0.2;"
-            ></div>
-        </div>
-        <div class="relative text-white px-10 pb-6 -mt-6 ">
-                <span class="block opacity-75 -mb-1">{{ activity.creator }}</span>
-            <div class="flex justify-left">
-                <span class="block font-semibold text-xl">{{ activity.name }}</span>
+
+        <!-- Content of the Card -->
+        <div class="flex mt-auto">
+            <div class="relative text-white flex flex-col items-start opacity-100 group-hover:opacity-0 transition-opacity duration-300">
+                <span class="block opacity-75 text-sm mb-2">{{ activity.creator }}</span>
+                <div class="flex justify-start">
+                    <span class="block font-semibold text-xl">{{ activity.name }}</span>
+                </div>
             </div>
-            <button class=" absolute inline-flex bottom-3.5 right-2 text-white-700 hover:text-white border border-white-700 hover:bg-white-800 focus:ring-4 focus:outline-none focus:ring-white-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-white-500 dark:text-white dark:hover:text-white dark:hover:bg-indigo-700 dark:focus:ring-white-900">save</button>
+        </div>
+
+        <!-- Additional Info that will appear on hover -->
+        <div class="extra-info absolute opacity-0 group-hover:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white p-4 rounded-xl transition-opacity duration-300 w-4/5 text-center">
+            <h1 class="text-2xl font-semibold mb-2">{{activity.name}}</h1>
+            <span class="block font-semibold">Topics: </span>
+            <p class="mb-2">{{activity.topic}}</p>
+            <span class="block font-semibold">Location:</span>
+            <p class="mb-2 break-words">{{ activity.place }}</p>
+            <span class="block font-semibold">Date:</span>
+            <p class="mb-2"> {{ activity.date }}</p>
+        </div>
+
+        <div class="relative flex justify-between items-end">
+            <div class="flex space-x-2 ml-auto">
+                <button
+                    class="text-white hover:text-indigo-700 border border-white hover:bg-white focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-6 py-3 text-center"
+                    @click="saveActivity"
+                >
+                    Save
+                </button>
+
+                <button
+                    class="text-white hover:text-indigo-700 border border-white hover:bg-white focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-6 py-3 text-center"
+                    @click="reportActivity"
+                >
+                    Report
+                </button>
+            </div>
         </div>
     </div>
 </template>
-
-<script>
-export default {
+  
+  <script>
+  export default {
     props: {
-        activity: {
-            type: Object,
-            required: true,
-        },
+      activity:{
+        type : Object,
+        required: true
+      }
     },
-};
-</script>
+
+    methods: {
+        async saveActivity() {
+        try {
+            console.log("Activity ID:", this.activity.id);
+            console.log("Auth token: ", localStorage.getItem('authToken'));
+
+            const res = await fetch((`http://localhost:8000/api/v1/activities/join/${this.activity.id}`), {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken'),
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (res.ok) {
+                console.log('Activity saved successfully');
+                alert('Activity joined successfully');
+            } else {
+                const errorData = await res.json();
+                console.error('Error response from server:', errorData);
+                alert(`Error: ${errorData.message || 'Failed to join activity'}`);
+            }
+        } catch (e) {
+            console.error('Error saving activity:', e);
+            alert('An unexpected error occurred while saving the activity');
+        }
+    },
+
+    async reportActivity() {
+        try{
+            const res = await fetch(`http://localhost:8000/api/v1/activities/report/${this.activity.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'Bearer '+ localStorage.getItem('authToken'),
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (res.ok) {
+                alert("Report successfully the activity");
+            }
+        }
+        catch (e) {
+            console.error('Error reporting activity:', e);
+            alert('An unexpected error occurred while reporting the activity');
+        }
+    }
+  }
+
+}
+
+  </script>
+  
+  

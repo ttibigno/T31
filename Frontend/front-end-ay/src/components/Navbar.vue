@@ -2,16 +2,24 @@
     <nav :class="['flex items-center justify-between py-4 px-6 bg-indigo-950'] ">
         <div class="flex items-center w-full max-w-7xl mx-auto">
 
-            <a class="text-2xl font-bold text-zinc-100" href="#" >AroundYou</a>
+            <a class="text-2xl font-bold text-zinc-100">AroundYou</a>
 
             <ul class="flex space-x-4 ml-auto text-zinc-100">
-                <li v-for="(page, index) in publishedPages" :key="index">
+                <li v-for="(pages, index) in publishedPages" :key="index">
                     <navbar-link
-                        :page="page"
+                        :page="pages"
                         :isActive="activePage === index"
+                        :index = "index"
                         @click.prevent="navLinkClick(index)"
                     ></navbar-link>
                 </li>
+                <a>
+                    <router-link
+                        :to="`/createActivity`"
+                        class="nav-link" 
+                        aria-current="page" 
+                    >Create Activity</router-link>  
+                </a>
             </ul>
 
             <div class="ml-4">
@@ -32,37 +40,11 @@ export default {
     },
 
     props: ['pages', 'activePage', 'navLinkClick'],
-    
-    data() {
-        return {
-            theme: 'light', // Default theme
-        };
-    },
 
     computed: {
         publishedPages() {
             return this.pages.filter((p) => p.published);
         },
-    },
-
-    created() {
-        this.getThemeSettings();
-    },
-
-    methods: {
-        changeTheme() {
-            this.theme = this.theme === 'light' ? 'dark' : 'light';
-            this.storeThemeSettings();
-        },
-
-        storeThemeSettings() {
-            localStorage.setItem('theme', this.theme);
-        },
-
-        getThemeSettings() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) this.theme = savedTheme;
-        },
-    },
+    }
 };
 </script>
