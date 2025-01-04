@@ -1,5 +1,6 @@
 <template>
-    <div class="p-8 flex flex-col items-left justify-left bg-zinc-100 space-y-4" v-if="showActivities">
+    <div class="p-8 flex flex-wrap space-x-3 justify-evenly bg-zinc-100 space-y-4" v-if="showActivities">
+        <!-- CardActivity component with responsive layout -->
         <CardActivity 
             v-for="(activity, index) in publishedCard" 
             :key="index" 
@@ -23,7 +24,7 @@ export default {
     },
     computed: {
         showActivities() {
-            return this.$route.path === '/0'
+            return this.$route.path === '/0';
         },
 
         publishedCard() {
@@ -32,3 +33,4 @@ export default {
     },
 };
 </script>
+

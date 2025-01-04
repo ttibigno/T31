@@ -10,7 +10,8 @@
     "core-js": "^3.8.3",
     "mitt": "^3.0.1",
     "vue": "^3.2.13",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "vue3-google-map": "^0.21.0"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",

@@ -91,12 +91,12 @@ export default {
         // Funzione per navigare alla dashboard
         const goToDashboard = () => {
             closePopUp();
-            router.push('dashboard');
+            router.push('Dashboard');
         };
 
         // Funzione per fare il logout
         const logout = () => {
-            localStorage.removeItem('authToken');
+            localStorage.removeItem('authToken'); //tolgo il remove e aggiungo chiamata a backend
             isAuthenticated.value = false; // Aggiorna lo stato di autenticazione
             closePopUp(); // Chiude il popup
             router.push('/0'); // Reindirizza alla pagina iniziale (login)

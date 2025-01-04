@@ -36,7 +36,6 @@ export async function loginUser(username, password) {
         };
     }
 }
-
 export async function registerUser(name, surname, username, email, password) {
     try {
         const response = await fetch('http://localhost:8000/api/v1/auth/register', {
