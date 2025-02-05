@@ -215,7 +215,7 @@ router.put('/join/:id', authenticateToken, async (req, res) => {
 })
 
 //rimuovi un'attività (per operatore comunale)
-router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
+router.delete('/admin/:id', authenticateToken, verifyAdmin, async (req, res) =>{
     const activityId = req.params.id;
     if (await isIDValid(activityId)){
 
@@ -226,6 +226,30 @@ router.delete('/:id', authenticateToken, verifyAdmin, async (req, res) =>{
         }
 
         res.status(200).json({ message: 'Attività eliminata con successo' });
+    }  catch(error){
+        res.status(500).json({message: 'Errore durante eliminazione attività'});
+    }
+    }
+    else {
+        res.status(400);
+        res.end();
+    }
+});
+
+router.delete('/user/:id', authenticateToken, async (req, res) =>{
+    const activityId = req.params.id;
+    const user = req.user.username;
+    if (await isIDValid(activityId)){
+    try{
+        const deletedActivity= await Activity.findOneAndDelete(
+            {_id : activityId, creator: user },
+        );
+
+        if (!deletedActivity) {
+            return res.status(404).json({ message: 'Attività non trovata o user non autorizzato' });
+        }
+
+       res.status(200).json({ message: 'Attività eliminata con successo' });
     }  catch(error){
         res.status(500).json({message: 'Errore durante eliminazione attività'});
     }

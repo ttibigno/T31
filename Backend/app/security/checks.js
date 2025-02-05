@@ -19,7 +19,7 @@ async function userReported(userId, activityId){
 }
 
 async function isIDValid(anyId){
-    return (ObjectId.isValid(anyId) && (new ObjectId(anyId)).toString === anyId )
+    return (ObjectId.isValid(anyId) && (new ObjectId(anyId)).toString() === anyId )
 }
 
 
