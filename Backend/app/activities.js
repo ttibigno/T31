@@ -209,11 +209,22 @@ router.put('/join/:id', authenticateToken, async (req, res) => {
         }
 }}
     else {
+        console.log('ciao')
         res.status(400);
         res.end();
     }
 })
 
+//restituisce allo user le attività a cui partecipa
+router.get('/join/my', authenticateToken, async( req, res) =>{
+    try {
+        const userId = req.user.id;
+        const activities = await Activity.find({ joinedUserIds: userId });
+        res.json(activities);
+    } catch (error) {
+        res.status(500).json({ error: 'Errore interno del server' });
+    }
+} )
 //rimuovi un'attività (per operatore comunale)
 router.delete('/admin/:id', authenticateToken, verifyAdmin, async (req, res) =>{
     const activityId = req.params.id;
