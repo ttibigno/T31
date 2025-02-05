@@ -69,7 +69,7 @@ mongoose.connect(database, {
             topic: [("University"), ("New")],
             place: "Povo1",
             date: "2024-11-08T17:15:00.000+02:00",
-            creator: "server",
+            creator: "usr1",
             maxSlot: 4,
             remainingSlots: 4,
             contacts: [],
@@ -88,11 +88,24 @@ mongoose.connect(database, {
             surname: "usr1",
             username: "usr1",
             email: "usr1@test.test",
-            password: await salt("password")
+            password: await salt("password"),
+            role : "admin"
         });
         return usr1.save()
     }).then( ()  => {
         (console.log("Created usr1"));
+    }).then( async () => {
+        var usr2 = new User({
+            name: "usr2",
+            surname: "usr2",
+            username: "usr2",
+            email: "usr2@test.test",
+            password: await salt("password2"),
+            role : "user"
+        });
+        return usr2.save()
+    }).then( ()  => {
+        (console.log("Created usr2"));
     })
     
     console.log("Done.");

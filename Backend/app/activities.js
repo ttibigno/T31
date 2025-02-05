@@ -144,7 +144,7 @@ router.post('', authenticateToken , async (req, res) => {
 router.put('/report/:id', authenticateToken, async( req, res) => {
     const userId = req.user.id;
     const activityId = req.params.id;
-    if ( await isIDValid(userId)){
+    if (await isIDValid(userId)){
         if(await userReported(req.user.id, req.params.id)) {
             res.status(401);
             res.end();
