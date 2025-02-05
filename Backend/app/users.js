@@ -11,7 +11,6 @@ router.use((req, res, next) => {
 
 //promuove un utente normale a ruolo di admin
 router.put('/promote/:id', authenticateToken, verifyAdmin, async(req,res) =>{
-
     const userId= req.params.id;
     try{
         const user = await User.findById(userId);
@@ -34,6 +33,31 @@ router.put('/promote/:id', authenticateToken, verifyAdmin, async(req,res) =>{
     } catch(err){
         res.status(500).json({message: 'Errore durante la Promozione', error: err});
     }
+});
+
+//restituisce all'admin tutti gli user (admin esclusi) presenti nel sistema.
+router.get('/all', authenticateToken, verifyAdmin, async (req, res) => {
+  try {
+      const users = await User.find({ role : {$ne: 'admin'}}).select('-password');
+      res.status(200).json({ users });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Errore durante il recupero degli utenti', error: err.message });
+  }
+});
+
+//restituisce all'admin solo gli user (admin esclusi) con username corrispondente alla stringa di ricerca
+router.get('/search/:query',authenticateToken, verifyAdmin, async (req, res) => {
+  try {
+      const query = req.params.query;
+      const users = await User.find({
+          username: { $regex: query, $options: 'i' }, 
+      });
+
+      res.json(users);
+  } catch (error) {
+      res.status(500).json({ error: 'Errore interno del server' });
+  }
 });
 
 //restituisce i dati privati dell'utente eccetto la sua password

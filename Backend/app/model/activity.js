@@ -12,7 +12,7 @@ module.exports = mongoose.model('Activities', new Schema({
     "creator": { type: String, required: true },
     "maxSlot": { type: Number, required: true },
     "remainingSlots": Number,
-    "contacts": [String],
+    "contacts": [String],//da cavare?
     "warnings": { type: Number, default: 0 },
     "joinedUserIds": [mongoose.Types.ObjectId],
     "reportUserIds": [mongoose.Types.ObjectId],

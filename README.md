@@ -24,6 +24,6 @@ To generate a safe SECRET_ACCESS_TOKEN and ADMIN_SECRET to include in `.env` fil
 ## Loading and clearing data
 You can populate and clear the database with the scripts found inside the `scripts/` folder using
 ```shell
-> npm run clear
-> npm run load
+> npm run clear cloud
+> npm run load cloud
 ```
