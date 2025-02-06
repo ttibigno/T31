@@ -3,7 +3,7 @@ const {authenticateToken} = require('./security/verification');
 const {verifyAdmin} = require('./security/verification');
 const User = require('./model/user');
 const router = express.Router();
-
+const Activity= require('./model/activity');
 router.use((req, res, next) => {
     console.log(`Routing to /users${req.url}`);
     next();
@@ -113,5 +113,21 @@ router.put('/private', authenticateToken, async (req, res) => {
       res.status(500).json({ error:'Errore interno del server.' });
     }
   });
+  router.delete('/private', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        console.log("Tentativo di eliminazione dell'utente con ID:", userId);
+
+        await Activity.deleteMany({ creator: userId });
+
+        await User.findByIdAndDelete(userId);
+        res.status(200).json({ message: "Account eliminato con successo." });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Errore durante l'eliminazione dell'account." });
+    }
+});
+
 
 module.exports = router;

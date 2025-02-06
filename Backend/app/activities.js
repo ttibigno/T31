@@ -46,7 +46,7 @@ router.get('/monitor/',authenticateToken, verifyAdmin, async(req,res) => {
         .sort({warnings:-1});
 
         if(reportedActivities.length === 0) {
-            return res.status(205).json({message: 'Nessuna attività con seganalazioni'});
+            return res.status(205).json({message: 'Nessuna attività con segnalazioni'});
         }
         res.status(200).json(reportedActivities);
     } catch (error){
