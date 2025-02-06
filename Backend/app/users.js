@@ -51,9 +51,10 @@ router.get('/search/:query',authenticateToken, verifyAdmin, async (req, res) => 
   try {
       const query = req.params.query;
       const users = await User.find({
+          role : {$ne: 'admin'},
           username: { $regex: query, $options: 'i' }, 
-      });
-
+      }).select('-password');
+      
       res.json(users);
   } catch (error) {
       res.status(500).json({ error: 'Errore interno del server' });
