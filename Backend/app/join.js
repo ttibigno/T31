@@ -3,7 +3,7 @@ const router = express.Router();
 const Activity = require('./model/activity');
 const User = require('./model/user');
 const {authenticateToken} = require('./security/verification');
-const {isIDValid, userJoined} = require('./security/checks');
+const {isIDValid, userJoined, checkTime} = require('./security/checks');
 
 //partecipa a un'attività
 router.put('/:id', authenticateToken, async (req, res) => {
@@ -12,12 +12,20 @@ router.put('/:id', authenticateToken, async (req, res) => {
             res.status(401);
             res.end();
         }
+        if(await checkTime(req.params.id)){
+            activity = await Activity.findByIdAndUpdate(
+                req.params.id,
+                { $set : {ended : true}},
+                {new: true, runValidators: false } 
+            )
+            res.status(403).json({ error: 'Attività terminata' });
+        }
         else {
         const userId = req.user.id;
         try{
 
             //https://mongoosejs.com/docs/tutorials/findoneandupdate.html
-            var activity = await Activity.findByIdAndUpdate(
+            activity = await Activity.findByIdAndUpdate(
                 req.params.id,
                 { $push : {joinedUserIds : userId}},
                 {new: true, runValidators: false } 

@@ -7,7 +7,7 @@ const {isIDValid} = require('./security/checks');
 
 router.use((req, res, next) => {
     console.log(`Routing to /users${req.url}`);
-    authenticateToken(req, res, next());
+    authenticateToken(req, res, next);
 });
 
 //restituisce le attività create dall'utente

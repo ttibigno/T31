@@ -12,8 +12,10 @@ const adminRoutes = require('./admin')
 const joinRoutes = require('./join')
 const reportRoutes = require('./report')
 
+// cors
 app.use(cors())
 
+// Middleware
 app.use(
     // REQ: https://expressjs.com/en/5x/api.html#req
     // RES: https://expressjs.com/en/5x/api.html#res

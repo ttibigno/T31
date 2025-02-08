@@ -9,10 +9,29 @@ router.use((req, res, next) => {
     next()
 })
 
+// update attività
+function updateActivities(){
+    Activity.find({ended: false}).then( (activities) => {
+        activities.forEach(async (activity) => {
+            if(activity.date.getTime() < currentTime.getTime()){
+                activity.ended = true;
+                console.log(`Attività ${activity.name} terminata\n`);
+                await activity.save();
+            }
+        })
+    })
+}
+
+// refresh time
+let currentTime = new Date();
+console.log(`Tempo attuale: ${currentTime}\n`);
+updateActivities();
+setInterval(() => {currentTime = new Date(), console.log(`Tempo attuale: ${currentTime}\n`), updateActivities()}, 600000);
+
 // GET every Activity from the Database
 router.get('', async (req, res) => {
     // https://mongoosejs.com/docs/api.html#model_Model.find
-    let activities = await Activity.find({}).lean()
+    let activities = await Activity.find({ended : false}).lean()
     activities = activities.map( (activity) => {
         return {
             id: activity._id,
@@ -41,6 +60,7 @@ router.get('/:query', async (req, res) => {
     }
     catch{}
     let activities = await Activity.find({
+        ended : false,
         $or: [
             { _id : id},
             // https://www.mongodb.com/docs/manual/reference/operator/query/regex/
