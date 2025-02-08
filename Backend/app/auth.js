@@ -5,26 +5,6 @@ const User = require('./model/user');
 const router = express.Router();
 const salt = require("./security/salt")
 
-
-// ONLY FOR DEVELOPMENT REMOVE LATER
-router.get('', async (req, res) => {
-    let users = await User.find({}).lean()
-    users = users.map( (user) => {
-        return {
-            id: user._id,
-            name: user.name,
-            surname: user.surname,
-            username: user.username,
-            email: user.email,
-            password: user.password,
-            regActivities: user.regActivities,
-            role: user.role
-        }
-    })
-    res.status(200).json(users);
-})
-
-
 router.post('/register', async(req,res)=>{
    const{name, surname, email, username, password} = req.body;
    if (!name || !surname ||!email || !username || !password) {

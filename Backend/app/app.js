@@ -6,8 +6,11 @@ const app = express();
 
 // external Router() module "activities"
 const activityRoutes = require('./activities')
-const authRoutes = require('./auth');
-const usersRoutes= require('./users');
+const authRoutes = require('./auth')
+const usersRoutes = require('./users')
+const adminRoutes = require('./admin')
+const joinRoutes = require('./join')
+const reportRoutes = require('./report')
 
 app.use(cors())
 
@@ -24,5 +27,8 @@ app.use(express.json());
 app.use('/api/v1/activities', activityRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', usersRoutes);
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/join', joinRoutes);
+app.use('/api/v1/report', reportRoutes);
 // returning the express app module to index.js
 module.exports = app;

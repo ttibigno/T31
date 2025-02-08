@@ -1,68 +1,116 @@
 const express= require('express');
 const {authenticateToken} = require('./security/verification');
-const {verifyAdmin} = require('./security/verification');
 const User = require('./model/user');
 const router = express.Router();
 const Activity= require('./model/activity');
+const {isIDValid} = require('./security/checks');
+
 router.use((req, res, next) => {
     console.log(`Routing to /users${req.url}`);
-    next();
+    authenticateToken(req, res, next());
 });
 
-//promuove un utente normale a ruolo di admin
-router.put('/promote/:id', authenticateToken, verifyAdmin, async(req,res) =>{
-    const userId= req.params.id;
+//restituisce le attività create dall'utente
+router.get('/activities', async( req, res) => {
+    const creator = req.user.username;
     try{
-        const user = await User.findById(userId);
-        if(!user){
-            return res.status(404).json({message: 'Utente non trovato'});
+    let activities = await Activity.find({creator : creator}).sort({date: -1}).lean();
+    if(activities.length === 0){
+        return res.status(205).json({message: 'Ancora nessuna attività creata'});
+    }
+    res.status(200).json(activities);
+} catch(error){
+    res.status(500).json({message: 'Errore nella restituzione delle attività create'});
+}
+});
+
+//Crea le proprie attività
+router.post('/activities', async (req, res) => {
+  const creator = req.user.username;
+  try {
+      const newActivity = new Activity({
+          name: req.body.name,
+          topic: req.body.topic,
+          place: req.body.place,
+          date: req.body.date,
+          creator: creator,  //il creatore è per forza quello che fa la richiesta
+          maxSlot: req.body.maxSlot,
+          remainingSlots: req.body.maxSlot, //gli slot rimanenti sono i maxSlot
+          contacts: req.body.contacts
+      });
+      const savedActivity = await newActivity.save();  //questo per aspettare che i dati si salvino sul database
+
+      res.status(201).json({
+          self: '/api/v1/activities/' + savedActivity.id,
+          name: savedActivity.name,
+          topic: savedActivity.topic,
+          place: savedActivity.place,
+          date: savedActivity.date,
+          creator: savedActivity.creator,
+          maxSlot: savedActivity.maxSlot,
+          remainingSlots: savedActivity.remainingSlots,
+          contacts: savedActivity.contacts
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Errore durante la creazione' });
+  }
+});
+
+//modifica una delle attività create dall'utente
+router.put('/activities/:id', async(req,res) => {
+    const activityId = req.params.id;
+    const updates = req.body;
+    const user= req.user.username;
+    try{
+        //non si può modificare il nome del creatore.
+        if (updates.creator) {
+            delete updates.creator;
         }
 
-        if(user.role==='admin'){
-            return res.status(400).json({message: 'Questo utente è già admin'});
-        }
-//https://mongoosejs.com/docs/tutorials/findoneandupdate.html
-        await User.findByIdAndUpdate(
-            userId,
-            {role:'admin'},
-            {new: true, runValidators: false } 
+        const updatedActivity= await Activity.findOneAndUpdate(
+            {_id : activityId, creator:user },
+            updates,
+            {new :true, runValidators: true}
         );
 
-        res.status(200).json({ message: 'Utente promosso ad admin'});
-
+        if(!updatedActivity){
+            return res.status(404).json({error: 'Attività non trovata o modifica non autorizzata'});
+        }
+        res.status(200).json(updatedActivity);
     } catch(err){
-        res.status(500).json({message: 'Errore durante la Promozione', error: err});
+        console.error(err);
+        res.status(400).json({error: 'Errore durante aggiornamento'});
     }
 });
 
-//restituisce all'admin tutti gli user (admin esclusi) presenti nel sistema.
-router.get('/all', authenticateToken, verifyAdmin, async (req, res) => {
-  try {
-      const users = await User.find({ role : {$ne: 'admin'}}).select('-password');
-      res.status(200).json({ users });
-  } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Errore durante il recupero degli utenti', error: err.message });
-  }
-});
+//elimina una delle attività create dall'utente
+router.delete('/activities/:id', authenticateToken, async (req, res) =>{
+    const activityId = req.params.id;
+    const user = req.user.username;
+    if (await isIDValid(activityId)){
+    try{
+        const deletedActivity= await Activity.findOneAndDelete(
+            {_id : activityId, creator: user },
+        );
 
-//restituisce all'admin solo gli user (admin esclusi) con username corrispondente alla stringa di ricerca
-router.get('/search/:query',authenticateToken, verifyAdmin, async (req, res) => {
-  try {
-      const query = req.params.query;
-      const users = await User.find({
-          role : {$ne: 'admin'},
-          username: { $regex: query, $options: 'i' }, 
-      }).select('-password');
-      
-      res.json(users);
-  } catch (error) {
-      res.status(500).json({ error: 'Errore interno del server' });
-  }
+        if (!deletedActivity) {
+            return res.status(404).json({ message: 'Attività non trovata o user non autorizzato' });
+        }
+
+       res.status(200).json({ message: 'Attività eliminata con successo' });
+    }  catch(error){
+        res.status(500).json({message: 'Errore durante eliminazione attività'});
+    }
+    }
+    else {
+        res.status(400);
+        res.end();
+    }
 });
 
 //restituisce i dati privati dell'utente eccetto la sua password
-router.get('/private', authenticateToken, async(req, res) =>{
+router.get('/private', async(req, res) =>{
     try{
         const userId = req.user.id;
         const user = await User.findById(userId).select('-password');
@@ -76,7 +124,7 @@ router.get('/private', authenticateToken, async(req, res) =>{
 });
 
 //aggiorna campo email o username del profilo
-router.put('/private', authenticateToken, async (req, res) => {
+router.put('/private', async (req, res) => {
     const {username, email} = req.body;
 
     if (!username && !email) {
@@ -113,7 +161,9 @@ router.put('/private', authenticateToken, async (req, res) => {
       res.status(500).json({ error:'Errore interno del server.' });
     }
   });
-  router.delete('/private', authenticateToken, async (req, res) => {
+
+//elimina l'utente e tutte le sue attività
+  router.delete('/private', async (req, res) => {
     try {
         const userId = req.user.id;
         console.log("Tentativo di eliminazione dell'utente con ID:", userId);
