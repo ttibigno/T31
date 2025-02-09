@@ -1,5 +1,7 @@
 //middleware da aggiungere tra gli argomenti di ogni endpoint che vogliamo proteggere
 const jwt = require('jsonwebtoken');
+const Admin = require('../model/admin');
+
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -14,11 +16,17 @@ function authenticateToken(req, res, next) {
 }
 
 // middleware da aggiungere agli endpoint che sono accessibili solo dall'admin
-function verifyAdmin(req,res,next){
-    if(req.user.role !== 'admin'){
-        return res.status(403).json({message: 'Accesso riservato agli admin'});
+async function verifyAdmin(req,res,next){
+    try{
+        const isAdmin= await Admin.findOne({userId: req.user.id});
+        if(!isAdmin) {
+            return res.status(403).json({message: 'Non sei autorizzato ad accedere a questa risorsa'});
+        }
+        next();
+    } catch (error){
+        res.status(500).json({message: 'Errore durante la verifica del ruolo di amministratore', error});
     }
-    next();
+
 } 
 
 module.exports = { authenticateToken, verifyAdmin }

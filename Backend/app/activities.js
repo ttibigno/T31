@@ -44,9 +44,7 @@ router.get('', async (req, res) => {
             remainingSlots: activity.remainingSlots,
             contacts: activity.contacts,
             warnings: activity.warnings,
-            joinedUserIds: activity.joinedUserIds,
             ended: activity.ended,
-            reportUserIds: activity.reportUserIds //RIMUOVI DOPO
         }
     })
     res.status(200).json(activities);
@@ -85,7 +83,6 @@ router.get('/:query', async (req, res) => {
             remainingSlots: activity.remainingSlots,
             contacts: activity.contacts,
             warnings: activity.warnings,
-            joinedUserIds: activity.joinedUserIds,
             ended: activity.ended
         }})
     res.status(200).json(activities);

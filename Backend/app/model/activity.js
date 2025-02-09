@@ -14,7 +14,5 @@ module.exports = mongoose.model('Activities', new Schema({
     "remainingSlots": Number,
     "contacts": [String],//da cavare?
     "warnings": { type: Number, default: 0 },
-    "joinedUserIds": [mongoose.Types.ObjectId],
-    "reportUserIds": [mongoose.Types.ObjectId],
     "ended": {type: Boolean, default: false}
 }))

@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Activity = require('./model/activity');
-const User = require('./model/user');
+const Activity = require('./model/activity.js');
+const User = require('./model/user.js');
+const Participation = require('./model/participation.js');
 const {authenticateToken} = require('./security/verification');
 const {isIDValid, userJoined, checkTime} = require('./security/checks');
 
@@ -22,6 +23,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
         }
         else {
         const userId = req.user.id;
+        const activityId = req.params.id;
         try{
 
             //https://mongoosejs.com/docs/tutorials/findoneandupdate.html

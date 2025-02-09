@@ -1,4 +1,4 @@
-const Activity = require('../model/activity');
+const Activity = require('../model/activity'); //da cambiare
 const mongoose = require('mongoose')
 const {Types: {ObjectId}} = mongoose;
 
