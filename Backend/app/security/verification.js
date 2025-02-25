@@ -18,7 +18,8 @@ function authenticateToken(req, res, next) {
 // middleware da aggiungere agli endpoint che sono accessibili solo dall'admin
 async function verifyAdmin(req,res,next){
     try{
-        const isAdmin= await Admin.findOne({userId: req.user.id});
+        console.log(req.user.id);
+        const isAdmin= await Admin.findOne({adminId: req.user.id});
         if(!isAdmin) {
             return res.status(403).json({message: 'Non sei autorizzato ad accedere a questa risorsa'});
         }

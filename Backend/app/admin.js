@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Activity = require('./model/activity');
 const User = require('./model/user');
+const Admin= require('./model/admin');
 const {isIDValid} = require('./security/checks');
 const {authenticateToken} = require('./security/verification');
 const {verifyAdmin} = require('./security/verification');
@@ -38,7 +39,6 @@ router.delete('/manageActivities/:id', async (req, res) =>{
         if (!deletedActivity) {
             return res.status(404).json({ message: 'Attività non trovata' });
         }
-
         res.status(200).json({ message: 'Attività eliminata con successo' });
     }  catch(error){
         res.status(500).json({message: 'Errore durante eliminazione attività'});
@@ -59,34 +59,35 @@ router.put('/manageUsers/:id', async(req,res) =>{
             return res.status(404).json({message: 'Utente non trovato'});
         }
 
-        if(user.role==='admin'){
-            return res.status(400).json({message: 'Questo utente è già admin'});
-        }
+       const existingAdmin = await Admin.findOne({adminId:userId});
+       if(existingAdmin){
+           return res.status(400).json({message: 'Questo utente è già admin'});
+       }
 //https://mongoosejs.com/docs/tutorials/findoneandupdate.html
-        await User.findByIdAndUpdate(
-            userId,
-            {role:'admin'},
-            {new: true, runValidators: false } 
-        );
+        const NewAdmin = new Admin ({adminId: userId});
+        await NewAdmin.save();
 
         res.status(200).json({ message: 'Utente promosso ad admin'});
 
     } catch(err){
+        console.error(err);
         res.status(500).json({message: 'Errore durante la Promozione', error: err});
     }
 });
 
-//eliminare utente
+//eliminare qualsiasi utente non admin
 router.delete('/manageUsers/:id', async(req,res) =>{
     const userId= req.params.id;
     try{
-        const user = await User.findByIdAndDelete(userId);
+        const user = await User.findById(userId);
         if(!user){
             return res.status(404).json({message: 'Utente non trovato'});
         }
-        if(user.role==='admin'){
-            return res.status(400).json({message: 'Impossibile eliminare admin'});
+        const admin= Admin.findOne({userId});
+        if(admin){
+            return res.status(400).json({message: 'Non puoi eliminare un admin'});
         }
+        await user.remove();
         res.status(200).json({ message: 'Utente eliminato con successo'});
     } catch(err){
         res.status(500).json({message: 'Errore durante la cancellazione', error: err});
@@ -96,8 +97,10 @@ router.delete('/manageUsers/:id', async(req,res) =>{
 //restituisce all'admin tutti gli user (admin esclusi) presenti nel sistema.
 router.get('/manageUsers', async (req, res) => {
   try {
-      const users = await User.find({ role : {$ne: 'admin'}}).select('-password').lean();
-      res.status(200).json({ users });
+        const admins= await Admin.find().select('adminId').lean();
+        const adminIds= admins.map(admin => admin.adminId);
+        const users = await User.find({_id: {$nin: adminIds}}).select('-password').lean();
+        res.status(200).json({ users });
   } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Errore durante il recupero degli utenti', error: err.message });
@@ -108,13 +111,16 @@ router.get('/manageUsers', async (req, res) => {
 router.get('/manageUsers/:query', async (req, res) => {
   try {
       const query = req.params.query;
+      const admins= await Admin.find().select('adminId').lean();
+      const adminIds= admins.map(admin => admin.adminId);
       const users = await User.find({
-          role : {$ne: 'admin'},
+          _id: {$nin: adminIds},
           username: { $regex: query, $options: 'i' }, 
-      }).select('-password');
+      }).select('-password').lean();
       
-      res.json(users);
+      res.status(200).json(users);
   } catch (error) {
+    console.log(error);
       res.status(500).json({ error: 'Errore interno del server' });
   }
 });
