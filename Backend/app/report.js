@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Activity = require('./model/activity');
+const Report = require('./model/report');
 const {isIDValid, userReported} = require('./security/checks');
 const {authenticateToken} = require('./security/verification');
 
@@ -20,11 +21,11 @@ router.put('/:id', authenticateToken, async( req, res) => {
                     { $inc: { warnings: 1 } },
                     {new : true}
                 );
-                await Activity.findByIdAndUpdate(
-                    activityId,
-                    { $push : {reportUserIds : userId}},
-                    {new: true, runValidators: false } 
-                )
+                var newReport = new Report({
+                    activityId: activityId,
+                    userId: userId
+                });
+                await newReport.save().catch(err => {console.log(err)});
         
                 if(!updatedActivity){
                     return res.status(404).json({message: 'Attività non trovata'});
@@ -34,6 +35,7 @@ router.put('/:id', authenticateToken, async( req, res) => {
                     warnings: updatedActivity.reportCount
                 });
             }  catch(error) {
+                console.log(error);
                 res.status(500).json({message :'Errore durante la segnalazione'});
             }
         }

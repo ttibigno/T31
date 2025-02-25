@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 require('dotenv').config();
 var Activity = require('../app/model/activity');
 var User = require('../app/model/user');
+var Participation = require('../app/model/participation');
+var Report = require('../app/model/report');
 const salt = require('../app/security/salt');
 
 var args = process.argv.slice(2);
@@ -133,5 +135,22 @@ mongoose.connect(database, {
     })
     
     console.log("Done.");
+
+    
+    console.log("Clearing participations..")
+    await Participation.deleteMany()
+        .exec()
+        .catch( error => {throw(error)})
+        .then( () => {
+            console.log("Done.");
+        })
+    console.log("Clearing reports..")
+    await Report.deleteMany()
+        .exec()
+        .catch( error => {throw(error)})
+        .then( () => {
+            console.log("Done.");
+        })
+
     process.exit(0);
 })

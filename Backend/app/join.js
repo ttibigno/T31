@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Activity = require('./model/activity.js');
-const User = require('./model/user.js');
 const Participation = require('./model/participation.js');
 const {authenticateToken} = require('./security/verification');
 const {isIDValid, userJoined, checkTime} = require('./security/checks');
@@ -13,7 +12,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
             res.status(401);
             res.end();
         }
-        if(await checkTime(req.params.id)){
+        else if(await checkTime(req.params.id)){
             activity = await Activity.findByIdAndUpdate(
                 req.params.id,
                 { $set : {ended : true}},
@@ -22,22 +21,21 @@ router.put('/:id', authenticateToken, async (req, res) => {
             res.status(403).json({ error: 'Attività terminata' });
         }
         else {
-        const userId = req.user.id;
-        const activityId = req.params.id;
+        var userId = req.user.id;
+        var activityId = req.params.id;
         try{
 
             //https://mongoosejs.com/docs/tutorials/findoneandupdate.html
-            activity = await Activity.findByIdAndUpdate(
+            var activity = await Activity.findByIdAndUpdate(
                 req.params.id,
-                { $push : {joinedUserIds : userId}},
+                { $inc: { remainingSlots: -1 } },
                 {new: true, runValidators: false } 
             )
-            await User.findByIdAndUpdate(
-                req.user.id,
-                { $push : {regActivities : req.params.id}},
-                {new: true, runValidators: false } 
-            )
-
+            var newPartecipation = new Participation({
+                    activityId: activityId,
+                    userId: userId,
+                  });
+                  await newPartecipation.save().catch(err => {console.log(err)}); 
             if (activity != undefined)
             res.status(200).json({ message: 'ok'});
             else res.status(400)
@@ -57,11 +55,29 @@ router.put('/:id', authenticateToken, async (req, res) => {
 router.get('', authenticateToken, async( req, res) =>{
     try {
         const userId = req.user.id;
-        const activities = await Activity.find({ joinedUserIds: userId });
+        let activities = await Participation.find({ userId: userId });
+        activities = await Promise.all(activities.map(async (activity) => {
+            let act = await Activity.findById(activity.activityId);
+            return {
+                id: act._id,
+                name: act.name,
+                topic: act.topic,
+                place: act.place,
+                date: act.date,
+                creator: act.creator,
+                maxSlot: act.maxSlot,
+                remainingSlots: act.remainingSlots,
+                contacts: act.contacts,
+                warnings: act.warnings,
+                ended: act.ended,
+            }
+        }));
+            //CONCAT array*/
         res.json(activities);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: 'Errore interno del server' });
     }
-} )
+})
 
 module.exports = router;
