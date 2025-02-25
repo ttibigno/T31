@@ -19,7 +19,7 @@ function authenticateToken(req, res, next) {
 async function verifyAdmin(req,res,next){
     try{
         console.log(req.user.id);
-        const isAdmin= await Admin.findOne({adminId: req.user.id});
+        const isAdmin= await Admin.findOne({userId: req.user.id});
         if(!isAdmin) {
             return res.status(403).json({message: 'Non sei autorizzato ad accedere a questa risorsa'});
         }

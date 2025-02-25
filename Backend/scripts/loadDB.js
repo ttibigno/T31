@@ -111,7 +111,7 @@ mongoose.connect(database, {
         console.log(admin1._id);
         await Admin.deleteMany();
         const adminDoc1 = new Admin({
-            adminId: admin1._id
+            userId: admin1._id
         });
         return adminDoc1.save();
     }).catch(err => {

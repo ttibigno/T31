@@ -59,12 +59,12 @@ router.put('/manageUsers/:id', async(req,res) =>{
             return res.status(404).json({message: 'Utente non trovato'});
         }
 
-       const existingAdmin = await Admin.findOne({adminId:userId});
+       const existingAdmin = await Admin.findOne({userId:userId});
        if(existingAdmin){
            return res.status(400).json({message: 'Questo utente è già admin'});
        }
 //https://mongoosejs.com/docs/tutorials/findoneandupdate.html
-        const NewAdmin = new Admin ({adminId: userId});
+        const NewAdmin = new Admin ({userId: userId});
         await NewAdmin.save();
 
         res.status(200).json({ message: 'Utente promosso ad admin'});
@@ -97,9 +97,9 @@ router.delete('/manageUsers/:id', async(req,res) =>{
 //restituisce all'admin tutti gli user (admin esclusi) presenti nel sistema.
 router.get('/manageUsers', async (req, res) => {
   try {
-        const admins= await Admin.find().select('adminId').lean();
-        const adminIds= admins.map(admin => admin.adminId);
-        const users = await User.find({_id: {$nin: adminIds}}).select('-password').lean();
+        const admins= await Admin.find().select('userId').lean();
+        const userIds= admins.map(admin => admin.userId);
+        const users = await User.find({_id: {$nin: userIds}}).select('-password').lean();
         res.status(200).json({ users });
   } catch (err) {
       console.error(err);
@@ -111,10 +111,10 @@ router.get('/manageUsers', async (req, res) => {
 router.get('/manageUsers/:query', async (req, res) => {
   try {
       const query = req.params.query;
-      const admins= await Admin.find().select('adminId').lean();
-      const adminIds= admins.map(admin => admin.adminId);
+      const admins= await Admin.find().select('userId').lean();
+      const userIds= admins.map(admin => admin.userId);
       const users = await User.find({
-          _id: {$nin: adminIds},
+          _id: {$nin: userIds},
           username: { $regex: query, $options: 'i' }, 
       }).select('-password').lean();
       
