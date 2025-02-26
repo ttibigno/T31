@@ -25,7 +25,7 @@ router.post('/login', async(req,res) => {
     try {
         const user = await User.findOne({ username });
         if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(403).json({ message:'Credenziali non valide' });
+            return res.status(401).json({ message:'Credenziali non valide' });
         }
 
         const token = jwt.sign({ id: user._id, username: user.username}, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '1h' });

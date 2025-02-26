@@ -26,11 +26,11 @@ app.use(
 )
 app.use(express.json());
 // Routing
-app.use('/api/v1/activities', activityRoutes);
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/users', usersRoutes);
-app.use('/api/v1/admin', adminRoutes);
-app.use('/api/v1/join', joinRoutes);
-app.use('/api/v1/report', reportRoutes);
+app.use('/api/v2/activities', activityRoutes);
+app.use('/api/v2/auth', authRoutes);
+app.use('/api/v2/users', usersRoutes);
+app.use('/api/v2/admin', adminRoutes);
+app.use('/api/v2/join', joinRoutes);
+app.use('/api/v2/report', reportRoutes);
 // returning the express app module to index.js
 module.exports = app;

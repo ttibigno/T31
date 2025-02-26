@@ -72,8 +72,7 @@ router.get('', authenticateToken, async( req, res) =>{
                 ended: act.ended,
             }
         }));
-            //CONCAT array*/
-        res.json(activities);
+        res.status(200).json(activities);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Errore interno del server' });

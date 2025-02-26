@@ -1,12 +1,12 @@
 openapi: 3.0.0
 info:
-  version: '1.0'
+  version: '2.0'
   title: "AroundYou OpenAPi 3.0.0"
   description: API for managing AroundYou requests
   license:
     name: MIT
 servers:
-  - url: http://localhost:8000/api/v1
+  - url: http://localhost:8000/api/v2
     description: Backend
 paths:
   /activities:
@@ -22,13 +22,197 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Activity'
-    post:
-      description: Post an activity
+  /activities/{query}:
+    get:
+      description: Search a list of activities with a keyword
+      summary: Search activities
+      responses:
+        '200':
+          description: 'Collection of activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+  /join/{id}:
+    put:
+      description: 'Join an activity'
+      summary: 'Join activity'
+      responses:
+        '200':
+          description: 'Activity joined succesfully'
+        '500':
+          description: 'Error on activity join'
+  /join:
+    get:
+      description: 'Get the list of the joined activities'
+      summary: 'Get joined activities'
+      responses:
+        '200':
+          description: 'Collection of joined activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '500':
+          description: 'Server error'
+  /report/{id}:
+    put:
+      description: 'Report an activity'
+      summary: 'Report activity'
+      responses:
+        '200':
+          description: 'Activity reported succesfully'
+        '401':
+          description: 'Activity already reported'
+        '404':
+          description: 'Activity not found'
+        '500':
+          description: 'Error on activity report'
+  /admin/manageActivities:
+    get:
       parameters:
         - name: authenticateToken
           in: header
           schema:
             type: string
+      description: 'Get a list of activities with warnings sorted by the most warned'
+      summary: 'Get activities with warnings'
+      responses:
+        '200':
+          description: 'Collection of activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '205':
+          description: 'No activity with warnings found'
+        '500':
+          description: 'Server error'
+  /admin/manageActivities/{id}:
+    delete:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Remove an activity'
+      summary: 'Remove activity'
+      responses:
+        '200':
+          description: 'Activity removed succesfully'
+        '404':
+          description: 'Activity not found'
+        '500':
+          description: 'Error during removal'
+  /admin/manageUsers/{id}:
+    get:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Get the list of users'
+      summary: 'Get users'
+      responses:
+        '200':
+          description: 'Collection of users'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: 'Server error'
+    put:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Promote a user to admin'
+      summary: 'Promote user'
+      responses:
+        '200':
+          description: 'User promoted succesfully'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Error during promotion'
+    delete:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Remove a user'
+      summary: 'Remove user'
+      responses:
+        '200':
+          description: 'User removed succesfully'
+        '400':
+          description: 'User is an admin'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Error during removal'
+  /admin/manageUsers:
+    get:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Return the list of users'
+      summary: 'Get users'
+      responses:
+        '200':
+          description: 'Collection of users'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: 'Server error'
+  
+  /users/activities:
+    get:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Get the list of activities created by the user'
+      summary: 'Get activities'
+      responses:
+        '200':
+          description: 'Collection of activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '205': 
+          description: 'No activities found'
+        '500':
+          description: 'Server error'
+    post:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Post an activity'
+      summary: 'Post activity'
       requestBody:
         required: true
         content:
@@ -46,99 +230,142 @@ paths:
                   $ref: '#/components/schemas/Activity'
         '500':
           description: 'Error on creation'
-  /activities/{query}:
-    get:
-      description: Search a list of activities with a keyword
+  /users/activities/{id}:
+    put:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Update an activity'
+      summary: 'Update activity'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Activity"
       responses:
         '200':
-          description: 'Collection of activities'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Activity'
+          description: 'Activity updated succesfully'
+        '404':
+          description: 'Activity not found'
+        '500':
+          description: 'Error on activity update'
     delete:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
       description: 'Delete an activity'
+      summary: 'Delete activity'
       responses:
-        '400': 
-          description: 'Activity id is not valid'
         '404':
           description: 'Activity not found'
         '200':
           description: 'Activity deleted succesfully'
         '500':
           description: 'Error during activity delete'
-  /activities/monitor/:
+        '400':
+          description: 'ActivityId is not valid'
+  /users/private:
     get:
-      description: Get a list of reported activities
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Get the user informations'
+      summary: 'Get user informations'
       responses:
         '200':
-          description: 'Collection of activities'
+          description: 'User informations'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Activity'
-        '500':
-          description: 'Error on check'
-        '205': 
-          description: 'No activity found'
-  /activities/report/{id}:
-    put:
-      description: 'Report an activity'
-      responses:
-        '400': 
-          description: 'Activity id is not valid'
-        '401':
-          description: 'This activity is already reported by current User'
+                $ref: '#/components/schemas/User'
         '404':
-          description: 'Activity not found'
-        '200':
-          description: 'Activity reported succesfully'
+          description: 'User not found'
         '500':
-          description: 'Error during report'
-  /activities/join/{id}:
+          description: 'Server error'
     put:
-      description: 'Join an activity'
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Update the user informations'
+      summary: 'Update user informations'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
       responses:
-        '400':
-          description: 'Activity id is not valid'
-        '401': 
-          description: 'This activity is arleady joined by current User'
         '200':
-          description: 'Activity joined succesfully'
+          description: 'User informations updated'
+        '400':
+          description: 'Field not found'
+        '404':
+          description: 'User not found'
+        '406':
+          description: 'Username or mail already in use'
         '500':
-          description: 'Error on activity join'
-
+          description: 'Server error'
+    delete:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Delete the user and his activities'
+      summary: 'Delete user'
+      responses:
+        '200':
+          description: 'User deleted succesfully'
+        '500':
+          description: 'Server error'
   /auth/login:
     post:
+      description: 'Login to the system'
+      summary: 'Login'
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - username
+                - password
               properties:
-                username: 
+                username:
                   type: string
-                password: 
+                  description: 'Username of the user'
+                password:
                   type: string
+                  description: 'Password of the user'
       responses:
         '200':
-          description: 'Authentication Token'
+          description: 'Login successful'
           content:
             application/json:
               schema:
-                type: string
-                example: authenticateToken
-        '403':
-          description: 'Wrong Credentials'
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: 'Token for authentication'
+        '401':
+          description: 'Wrong credentials'
         '500':
           description: 'Error on login'
   /auth/register:
     post:
+      description: 'Register to the system'
+      summary: 'Register'
       requestBody:
         required: true
         content:
@@ -149,24 +376,10 @@ paths:
         '201':
           description: 'User registered'
         '400':
-          description: 'Input Error'
+          description: 'Input error'
         '500':
-          description: 'Error during the creation of the User'
-  /users/promote/{id}:
-    put:
-      responses:
-        '200':
-          description: 'User promoted to admin succesfully'
-        '500':
-          description: 'Error during promotion'
-        '400':
-          description: 'User already is an admin'
-        '404':
-          description: 'User not found'
-
-
-
-  
+          description: 'Error during the creation of the user'
+    
 components:
   schemas:
     Activity:
@@ -224,3 +437,13 @@ components:
         password:
           type: string
           description: "Hashed password of the user"
+    Admin:
+      type: object
+      required:
+        - adminId
+        - userId
+      properties:
+        adminId:
+          type: string
+        userId:
+          type: string
