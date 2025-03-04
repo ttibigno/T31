@@ -37,15 +37,29 @@ paths:
                   $ref: '#/components/schemas/Activity'
   /join/{id}:
     put:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
       description: 'Join an activity'
       summary: 'Join activity'
       responses:
         '200':
           description: 'Activity joined succesfully'
+        '401':
+          description: 'Activity already joined'
+        '403':
+          description: 'Activity ended'
         '500':
           description: 'Error on activity join'
   /join:
     get:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
       description: 'Get the list of the joined activities'
       summary: 'Get joined activities'
       responses:
@@ -61,6 +75,11 @@ paths:
           description: 'Server error'
   /report/{id}:
     put:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
       description: 'Report an activity'
       summary: 'Report activity'
       responses:
@@ -117,8 +136,8 @@ paths:
           in: header
           schema:
             type: string
-      description: 'Get the list of users'
-      summary: 'Get users'
+      description: 'Search users by username'
+      summary: 'Search users by username'
       responses:
         '200':
           description: 'Collection of users'
@@ -141,6 +160,8 @@ paths:
       responses:
         '200':
           description: 'User promoted succesfully'
+        '400':
+          description: 'User is already an admin'
         '404':
           description: 'User not found'
         '500':
@@ -445,5 +466,7 @@ components:
       properties:
         adminId:
           type: string
+          description: 'Id associated to the collection of admins'
         userId:
           type: string
+          description: 'Id of the user promoted to admin'
