@@ -447,3 +447,29 @@ components:
           type: string
         userId:
           type: string
+    Report:
+      type: object
+      required:
+        - reportId
+        - activityId
+        - userId
+      properties:
+        reportId:
+          type: string
+        activityId:
+          type: string
+        userId:
+          type: string
+    Participation:
+      type: object
+      required:
+        - participationId
+        - activityId
+        - userId
+      properties:
+        participationId:
+          type: string
+        activityId:
+          type: string
+        userId:
+          type: string
