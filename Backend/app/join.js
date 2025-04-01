@@ -24,19 +24,24 @@ router.put('/:id', authenticateToken, async (req, res) => {
         var userId = req.user.id;
         var activityId = req.params.id;
         try{
-
             //https://mongoosejs.com/docs/tutorials/findoneandupdate.html
             var activity = await Activity.findByIdAndUpdate(
                 req.params.id,
                 { $inc: { remainingSlots: -1 } },
                 {new: true, runValidators: false } 
             )
+            if (activity != null) {
             var newPartecipation = new Participation({
-                    activityId: activityId,
-                    userId: userId,
-                  });
-                  await newPartecipation.save().catch(err => {console.log(err)}); 
-            if (activity != undefined)
+                activityId: activityId,
+                userId: userId,
+              });
+              await newPartecipation.save().catch(err => {console.log(err)}); 
+            }
+            else{
+                console.log(`${activity} is null. id provided: ${activityId}`);
+                res.status(404).end();
+            }
+            if (activity != undefined && activity != null)
             res.status(200).json({ message: 'ok'});
             else res.status(400)
             
