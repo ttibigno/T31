@@ -12,7 +12,6 @@ module.exports = mongoose.model('Activity', new Schema({
     "creator": { type: String, required: true },
     "maxSlot": { type: Number, required: true },
     "remainingSlots": Number,
-    "contacts": [String],//da cavare?
     "warnings": { type: Number, default: 0 },
     "ended": {type: Boolean, default: false}
 }))

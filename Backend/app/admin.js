@@ -21,7 +21,7 @@ router.get('/manageActivities', async(req,res) => {
         .sort({warnings:-1});
 
         if(reportedActivities.length === 0) {
-            return res.status(205).json({message: 'Nessuna attività con segnalazioni'});
+            return res.status(404).json({message: 'Nessuna attività con segnalazioni'});
         }
         res.status(200).json(reportedActivities);
     } catch (error){
@@ -45,7 +45,7 @@ router.delete('/manageActivities/:id', async (req, res) =>{
     }
     }
     else {
-        res.status(400);
+        res.status(404).json({ message: 'Attività non trovata' });
         res.end();
     }
 });
@@ -53,6 +53,7 @@ router.delete('/manageActivities/:id', async (req, res) =>{
 //promuove un utente normale a ruolo di admin
 router.put('/manageUsers/:id', async(req,res) =>{
     const userId= req.params.id;
+    if (await isIDValid(userId)){
     try{
         const user = await User.findById(userId);
         if(!user){
@@ -73,11 +74,14 @@ router.put('/manageUsers/:id', async(req,res) =>{
         console.error(err);
         res.status(500).json({message: 'Errore durante la Promozione', error: err});
     }
+    }
+    else return res.status(404).json({ message: 'Utente non trovato'});
 });
 
 //eliminare qualsiasi utente non admin
 router.delete('/manageUsers/:id', async(req,res) =>{
     const userId= req.params.id;
+    if (await isIDValid(userId)){
     try{
         const user = await User.findById(userId);
         if(!user){
@@ -91,7 +95,10 @@ router.delete('/manageUsers/:id', async(req,res) =>{
         res.status(200).json({ message: 'Utente eliminato con successo'});
     } catch(err){
         res.status(500).json({message: 'Errore durante la cancellazione', error: err});
-    }});
+    }
+    }
+    else return res.status(404).json({ message: 'Utente non trovato'});
+});
 
 
 //restituisce all'admin tutti gli user (admin esclusi) presenti nel sistema.

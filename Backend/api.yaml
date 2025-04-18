@@ -47,10 +47,12 @@ paths:
       responses:
         '200':
           description: 'Activity joined succesfully'
+        '400':
+          description: 'ActivityId is not valid'
         '401':
-          description: 'Activity already joined'
+          description: 'Invalid token or credentials'
         '403':
-          description: 'Activity ended'
+          description: 'Activity ended or already joined'
         '500':
           description: 'Error on activity join'
   /join:
@@ -71,6 +73,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Activity'
+        '401':
+          description: 'Invalid token or credentials'
         '500':
           description: 'Server error'
   /report/{id}:
@@ -85,8 +89,10 @@ paths:
       responses:
         '200':
           description: 'Activity reported succesfully'
-        '401':
+        '400':
           description: 'Activity already reported'
+        '401':
+          description: 'Invalid token or credentials'
         '404':
           description: 'Activity not found'
         '500':
@@ -111,6 +117,8 @@ paths:
                   $ref: '#/components/schemas/Activity'
         '205':
           description: 'No activity with warnings found'
+        '401':
+          description: 'Invalid token or credentials'
         '500':
           description: 'Server error'
   /admin/manageActivities/{id}:
@@ -125,6 +133,8 @@ paths:
       responses:
         '200':
           description: 'Activity removed succesfully'
+        '401':
+          description: 'Invalid token or credentials'
         '404':
           description: 'Activity not found'
         '500':
@@ -147,6 +157,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        '401':
+          description: 'Invalid token or credentials'
         '500':
           description: 'Server error'
     put:
@@ -162,6 +174,8 @@ paths:
           description: 'User promoted succesfully'
         '400':
           description: 'User is already an admin'
+        '401':
+          description: 'Invalid token or credentials'
         '404':
           description: 'User not found'
         '500':
@@ -179,6 +193,8 @@ paths:
           description: 'User removed succesfully'
         '400':
           description: 'User is an admin'
+        '401':
+          description: 'Invalid token or credentials'
         '404':
           description: 'User not found'
         '500':
@@ -201,6 +217,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        '401':
+          description: 'Invalid token or credentials'
         '500':
           description: 'Server error'
   
@@ -222,8 +240,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Activity'
-        '205': 
+        '204': 
           description: 'No activities found'
+        '400':
+          description: 'Activity fields are missing'
+        '401':
+          description: 'Invalid token or credentials'
         '500':
           description: 'Server error'
     post:
@@ -249,6 +271,8 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Activity'
+        '401':
+          description: 'Invalid token or credentials'
         '500':
           description: 'Error on creation'
   /users/activities/{id}:
@@ -269,6 +293,8 @@ paths:
       responses:
         '200':
           description: 'Activity updated succesfully'
+        '401':
+          description: 'Invalid token or credentials'
         '404':
           description: 'Activity not found'
         '500':
@@ -282,14 +308,14 @@ paths:
       description: 'Delete an activity'
       summary: 'Delete activity'
       responses:
-        '404':
-          description: 'Activity not found'
         '200':
           description: 'Activity deleted succesfully'
+        '401':
+          description: 'Invalid token or credentials'
+        '404':
+          description: 'Activity not found or invalid ActivityId'
         '500':
           description: 'Error during activity delete'
-        '400':
-          description: 'ActivityId is not valid'
   /users/private:
     get:
       parameters:
@@ -306,6 +332,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '401':
+          description: 'Invalid token or credentials'
         '404':
           description: 'User not found'
         '500':
@@ -329,6 +357,8 @@ paths:
           description: 'User informations updated'
         '400':
           description: 'Field not found'
+        '401':
+          description: 'Invalid token or credentials'
         '404':
           description: 'User not found'
         '406':
@@ -346,6 +376,8 @@ paths:
       responses:
         '200':
           description: 'User deleted succesfully'
+        '401':
+          description: 'Invalid token or credentials'
         '500':
           description: 'Server error'
   /auth/login:
@@ -380,7 +412,7 @@ paths:
                     type: string
                     description: 'Token for authentication'
         '401':
-          description: 'Wrong credentials'
+          description: 'Invalid credentials'
         '500':
           description: 'Error on login'
   /auth/register:
@@ -396,8 +428,8 @@ paths:
       responses:
         '201':
           description: 'User registered'
-        '400':
-          description: 'Input error'
+        '401':
+          description: 'Missing credentials'
         '500':
           description: 'Error during the creation of the user'
     

@@ -16,7 +16,7 @@ router.get('/activities', async( req, res) => {
     try{
     let activities = await Activity.find({creator : creator}).sort({date: -1}).lean();
     if(activities.length === 0){
-        return res.status(205).json({message: 'Ancora nessuna attività creata'});
+        return res.status(204).json({message: 'Ancora nessuna attività creata'});
     }
     res.status(200).json(activities);
 } catch(error){
@@ -27,16 +27,20 @@ router.get('/activities', async( req, res) => {
 //Crea le proprie attività
 router.post('/activities', async (req, res) => {
   const creator = req.user.username;
+  const { name, topic, place, date, maxSlot, contacts } = req.body;
+  if (!name || !topic || !place || !date || !maxSlot || !contacts) {
+    return res.status(400).json({ message: 'Tutti i campi sono obbligatori!' });
+    }
   try {
       const newActivity = new Activity({
-          name: req.body.name,
-          topic: req.body.topic,
-          place: req.body.place,
-          date: req.body.date,
+          name: name,
+          topic: topic,
+          place: place,
+          date: date,
           creator: creator,  //il creatore è per forza quello che fa la richiesta
-          maxSlot: req.body.maxSlot,
-          remainingSlots: req.body.maxSlot, //gli slot rimanenti sono i maxSlot
-          contacts: req.body.contacts
+          maxSlot: maxSlot,
+          remainingSlots: maxSlot, //gli slot rimanenti sono i maxSlot
+          contacts: contacts
       });
       const savedActivity = await newActivity.save();  //questo per aspettare che i dati si salvino sul database
 
@@ -62,7 +66,10 @@ router.put('/activities/:id', async(req,res) => {
     const activityId = req.params.id;
     const updates = req.body;
     const user= req.user.username;
-    try{
+    if (!await isIDValid(activityId)){
+        return res.status(404).json({error: 'Attività non trovata'});
+    }
+    else try{
         //non si può modificare il nome del creatore.
         if (updates.creator) {
             delete updates.creator;
@@ -104,7 +111,7 @@ router.delete('/activities/:id', authenticateToken, async (req, res) =>{
     }
     }
     else {
-        res.status(400);
+        res.status(404);
         res.end();
     }
 });

@@ -18,7 +18,7 @@ else if (args == "cloud"){
 }
 else {
     console.log("Incorrect args, check README");
-    exit();
+    process.exit(1);
 }
 
 // app.locals: https://expressjs.com/en/5x/api.html#app.locals

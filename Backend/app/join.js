@@ -9,7 +9,7 @@ const {isIDValid, userJoined, checkTime} = require('./security/checks');
 router.put('/:id', authenticateToken, async (req, res) => {
     if (await isIDValid(req.params.id)){
         if(await userJoined(req.user.id, req.params.id)) {
-            res.status(401);
+            res.status(403);
             res.end();
         }
         else if(await checkTime(req.params.id)){
@@ -38,7 +38,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
               await newPartecipation.save().catch(err => {console.log(err)}); 
             }
             else{
-                console.log(`${activity} is null. id provided: ${activityId}`);
+                //console.log(`${activity} is null. id provided: ${activityId}`);
                 res.status(404).end();
             }
             if (activity != undefined && activity != null)

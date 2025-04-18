@@ -5,7 +5,6 @@ const Admin = require('../model/admin');
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-
     if (!token) return res.sendStatus(401);
 
     jwt.verify(token, process.env.SECRET_ACCESS_TOKEN, (err, user) => {
@@ -18,8 +17,7 @@ function authenticateToken(req, res, next) {
 // middleware da aggiungere agli endpoint che sono accessibili solo dall'admin
 async function verifyAdmin(req,res,next){
     try{
-        console.log(req.user.id);
-        const isAdmin= await Admin.findOne({userId: req.user.id});
+        const isAdmin = await Admin.findOne({userId: req.user.id});
         if(!isAdmin) {
             return res.status(403).json({message: 'Non sei autorizzato ad accedere a questa risorsa'});
         }

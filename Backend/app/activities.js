@@ -69,7 +69,7 @@ router.get('/:query', async (req, res) => {
             { place : { $regex: '.*' + req.params.query + '.*', $options: "i" }},
             { creator : { $regex: '.*' + req.params.query + '.*' }}
         ]  
-    })
+    }).lean()
 
     activities = activities.map((activity) => {
         return {
