@@ -27,3 +27,9 @@ You can populate and clear the database with the scripts found inside the `scrip
 > npm run clear cloud
 > npm run load cloud
 ```
+
+## Running Frontend
+You can run the frontend with
+```shell
+> npm run serve
+```
