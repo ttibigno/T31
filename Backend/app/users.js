@@ -44,7 +44,6 @@ router.post('/activities', async (req, res) => {
       const savedActivity = await newActivity.save();  //questo per aspettare che i dati si salvino sul database
 
       res.status(201).json({
-          self: '/api/v1/activities/' + savedActivity.id,
           name: savedActivity.name,
           topic: savedActivity.topic,
           place: savedActivity.place,

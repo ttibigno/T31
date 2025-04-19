@@ -123,7 +123,7 @@ test('GET /manageUsers should return 200 with an adminToken', async () => {
 test('GET /manageUsers/:query should return 200 with an adminToken', async () => {
     const admin = await User.findOne({ username: 'admin1' });
     var adminToken = await jwt.sign( {id: admin._id, username: 'admin1'}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '1h'});
-    return await request(app).get(api + '/manageUsers/randomId')
+    return await request(app).get(api + '/manageUsers/anyUsername')
     .set('Authorization', 'Bearer ' + adminToken).set('Accept', 'application/json')
     .expect(200);
 })
