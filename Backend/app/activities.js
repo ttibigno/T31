@@ -42,7 +42,6 @@ router.get('', async (req, res) => {
             creator: activity.creator,
             maxSlot: activity.maxSlot,
             remainingSlots: activity.remainingSlots,
-            contacts: activity.contacts,
             warnings: activity.warnings,
             ended: activity.ended,
         }
@@ -81,7 +80,6 @@ router.get('/:query', async (req, res) => {
             creator: activity.creator,
             maxSlot: activity.maxSlot,
             remainingSlots: activity.remainingSlots,
-            contacts: activity.contacts,
             warnings: activity.warnings,
             ended: activity.ended
         }})

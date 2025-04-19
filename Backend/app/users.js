@@ -40,7 +40,6 @@ router.post('/activities', async (req, res) => {
           creator: creator,  //il creatore è per forza quello che fa la richiesta
           maxSlot: maxSlot,
           remainingSlots: maxSlot, //gli slot rimanenti sono i maxSlot
-          contacts: contacts
       });
       const savedActivity = await newActivity.save();  //questo per aspettare che i dati si salvino sul database
 
@@ -52,8 +51,7 @@ router.post('/activities', async (req, res) => {
           date: savedActivity.date,
           creator: savedActivity.creator,
           maxSlot: savedActivity.maxSlot,
-          remainingSlots: savedActivity.remainingSlots,
-          contacts: savedActivity.contacts
+          remainingSlots: savedActivity.remainingSlots
       });
   } catch (error) {
       console.error(error);

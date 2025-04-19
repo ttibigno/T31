@@ -463,9 +463,16 @@ components:
         maxSlot:
           type: integer
           description: 'Number of total free slots of the activity'
-        contacts:
-          type: array
-          description: 'Links to external sites for contacting the creator of the activity'
+        remainingSlots:
+          type: integer
+          description: 'Number of remaining free slots of the activity'
+        warnings:
+          type: integer
+          description: 'Number of warnings of the activity'
+        ended:
+          type: boolean
+          default: false
+          description: "True if the activity is ended"
     User:
       type: object
       required:

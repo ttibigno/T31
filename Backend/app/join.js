@@ -72,7 +72,6 @@ router.get('', authenticateToken, async( req, res) =>{
                 creator: act.creator,
                 maxSlot: act.maxSlot,
                 remainingSlots: act.remainingSlots,
-                contacts: act.contacts,
                 warnings: act.warnings,
                 ended: act.ended,
             }
