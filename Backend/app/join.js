@@ -9,7 +9,7 @@ const {isIDValid, userJoined, checkTime} = require('./security/checks');
 router.put('/:id', authenticateToken, async (req, res) => {
     if (await isIDValid(req.params.id)){
         if(await userJoined(req.user.id, req.params.id)) {
-            res.status(403);
+            res.status(404);
             res.end();
         }
         else if(await checkTime(req.params.id)){
@@ -18,7 +18,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
                 { $set : {ended : true}},
                 {new: true, runValidators: false } 
             )
-            res.status(403).json({ error: 'Attività terminata' });
+            res.status(404).json({ error: 'Attività terminata' });
         }
         else {
         var userId = req.user.id;

@@ -51,7 +51,7 @@ paths:
           description: 'ActivityId is not valid'
         '401':
           description: 'Invalid token or credentials'
-        '403':
+        '404':
           description: 'Activity ended or already joined'
         '500':
           description: 'Error on activity join'

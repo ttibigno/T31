@@ -64,7 +64,7 @@ test('PUT /:id should return 200 with valid activityId and userId', async () => 
         .expect(200)
 })
 
-test('PUT /:id should return 403 with valid activityId and an user that has already joined', async () => {
+test('PUT /:id should return 404 with valid activityId and an user that has already joined', async () => {
     
     var testUsr = new User({
         name: "testUsr",
@@ -98,10 +98,10 @@ test('PUT /:id should return 403 with valid activityId and an user that has alre
     return await request(app).put(api + '/' + actTest._id)
         .set('Authorization', 'Bearer ' + userToken)
         .send({id: testUsr._id}).set('Accept', 'application/json')
-        .expect(403)
+        .expect(404)
 })
 
-test('PUT /:id should return 403 with valid ended activityId and userId', async () => {
+test('PUT /:id should return 404 with valid ended activityId and userId', async () => {
     var actTest = new Activity({
             name: "test activity",
             topic: [("test")],
@@ -128,7 +128,7 @@ test('PUT /:id should return 403 with valid ended activityId and userId', async 
     return await request(app).put(api + '/' + actTest._id)
         .set('Authorization', 'Bearer ' + userToken)
         .set('Accept', 'application/json')
-        .expect(403)
+        .expect(404)
 })
 
 test('PUT /:id should return 400 with an invalid activityId and a valid userId', async () => {
@@ -178,12 +178,31 @@ test('GET / should return 200 with valid userId', async () => {
     });
     await testUsr.save();
 
+    var actTest = new Activity({
+        name: "test activity",
+        topic: [("test")],
+        place: "test",
+        date: "2060-01-01T00:00:00.000+01:00",
+        creator: "usr1",
+        maxSlot: 10,
+        remainingSlots: 10,
+        contacts: [],
+        warnings: 0
+    });
+await actTest.save();
+
+var testParticipation = new Participation({
+    activityId: actTest._id,
+    userId: testUsr._id,
+});
+await testParticipation.save();
+
     var userToken = await jwt.sign( {id: testUsr._id, username: testUsr.username}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '1h'});
-    return await request(app).get(api + '/')
+    const response = await request(app).get(api + '/')
         .set('Authorization', 'Bearer ' + userToken)
         .send({id: testUsr._id}).set('Accept', 'application/json')
-        .expect(200)
-
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
 })
 
 test("GET / should return 401 with an invalid token", async () => {
