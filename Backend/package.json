@@ -29,6 +29,7 @@
   },
   "jest": {
     "verbose": true,
-    "collectCoverage": true
+    "collectCoverage": true,
+    "coverageProvider": "v8"
   }
 }

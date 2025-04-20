@@ -175,11 +175,7 @@ test('DELETE /manageUsers/:id should return 401 without a token', async () => {
     .expect(401);
 })
 
-/*
 
-Funzioava, non funziona più
-voglio piangere
-sto impazzendo
 
 test('DELETE /manageUsers/:id should return 200 with an adminToken and a valid userId', async () => {
     var testUsr = new User({
@@ -196,7 +192,6 @@ test('DELETE /manageUsers/:id should return 200 with an adminToken and a valid u
     .set('Authorization', 'Bearer ' + adminToken).set('Accept', 'application/json')
     .expect(200);
 })
-*/
 
 test('DELETE /manageUsers/:id should return 404 with an adminToken and an invalid userId', async () => {
     const admin = await User.findOne({ username: 'admin1' });

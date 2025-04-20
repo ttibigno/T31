@@ -33,10 +33,6 @@ test('POST /register should return 201 with valid credentials', async () => {
     const reque = await request(app).post(api + '/register')
     .send(query).set('Accept', 'application/json')
 
-    await User.deleteMany({name: "testUsr"}).catch(err => {
-        console.log("Error deleting test user", err);
-    });
-
     expect(reque.status).toBe(201)
 })
 
