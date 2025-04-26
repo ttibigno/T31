@@ -34,6 +34,21 @@ test('GET /manageActivities should return 401 without a token', async () => {
     .expect(401);
 })
 
+test('GET /manageActivities should return 403 without a token', async () => {
+    var testUsr = new User({
+        name: "testUsr",
+        surname: "testUsr",
+        username: "testUsrAdmin",
+        email: "test@admin.usr",
+        password: await salt("test")
+    });
+    await testUsr.save();
+    var token = await jwt.sign( {id: testUsr._id, username: testUsr.username}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '1h'});
+    return await request(app).get(api + '/manageActivities')
+    .set('Authorization', 'Bearer ' + token).set('Accept', 'application/json')
+    .expect(403);
+})
+
 test('GET /manageActivities should return 404 with an adminToken and 0 reported activities', async () => {
     const user = await await User.findOne({ username: 'admin1' });
     var adminToken = await jwt.sign( {id: user._id, username: 'admin1'}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '1h'});
@@ -75,6 +90,36 @@ test('DELETE /manageActivities/:id should return 401 without a token', async () 
     return await request(app).delete(api + '/manageActivities/anyId')
     .set('Accept', 'application/json')
     .expect(401);
+})
+
+test('DELETE /manageActivities should return 403 without a token', async () => {
+    var testUsr = new User({
+        name: "testUsr",
+        surname: "testUsr",
+        username: "testUsrAdmin2",
+        email: "test@admin.usr2",
+        password: await salt("test")
+    });
+    await testUsr.save();
+    var token = await jwt.sign( {id: testUsr._id, username: testUsr.username}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '1h'});
+    return await request(app).delete(api + '/manageActivities')
+    .set('Authorization', 'Bearer ' + token).set('Accept', 'application/json')
+    .expect(403);
+})
+
+test('DELETE /manageActivities/:id should return 403 without a token', async () => {
+    var testUsr = new User({
+        name: "testUsr",
+        surname: "testUsr",
+        username: "testUsrAdmin3",
+        email: "test@admin.usr3",
+        password: await salt("test")
+    });
+    await testUsr.save();
+    var token = await jwt.sign( {id: testUsr._id, username: testUsr.username}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '1h'});
+    return await request(app).delete(api + '/manageActivities/id')
+    .set('Authorization', 'Bearer ' + token).set('Accept', 'application/json')
+    .expect(403);
 })
 
 test('DELETE /manageActivities/:id should return 200 with an adminToken and a valid activityId', async () => {
@@ -138,8 +183,8 @@ test('PUT /manageUsers/:id should return 200 with an adminToken and a valid user
     var testUsr = new User({
             name: "testUsr",
             surname: "testUsr",
-            username: "testUsrAdmin2",
-            email: "test@admin.usr2",
+            username: "testUsrAdmin4",
+            email: "test@admin.usr4",
             password: await salt("test")
         });
     await testUsr.save();
@@ -175,14 +220,12 @@ test('DELETE /manageUsers/:id should return 401 without a token', async () => {
     .expect(401);
 })
 
-
-
 test('DELETE /manageUsers/:id should return 200 with an adminToken and a valid userId', async () => {
     var testUsr = new User({
         name: "testUsr",
         surname: "testUsr",
-        username: "testUsrAdmin3",
-        email: "test@admin.usr3",
+        username: "testUsrAdmin5",
+        email: "test@admin.usr5",
         password: await salt("test")
     });
     await testUsr.save();
