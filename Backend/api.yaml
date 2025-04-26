@@ -445,6 +445,8 @@ paths:
           description: 'User registered'
         '400':
           description: 'Missing credentials'
+        '409':
+          description: 'Username or email already in use'
         '500':
           description: 'Error during the creation of the user'
     
