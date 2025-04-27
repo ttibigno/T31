@@ -49,12 +49,12 @@ test('GET /manageActivities should return 403 without a token', async () => {
     .expect(403);
 })
 
-test('GET /manageActivities should return 404 with an adminToken and 0 reported activities', async () => {
+test('GET /manageActivities should return 204 with an adminToken and 0 reported activities', async () => {
     const user = await await User.findOne({ username: 'admin1' });
     var adminToken = await jwt.sign( {id: user._id, username: 'admin1'}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '1h'});
     return await request(app).get(api + '/manageActivities')
     .set('Authorization', 'Bearer ' + adminToken).set('Accept', 'application/json')
-    .expect(404);
+    .expect(204);
 })
 
 test('GET /manageActivities should return 200 with an adminToken and 1 or more reported activities', async () => {

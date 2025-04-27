@@ -21,7 +21,7 @@ router.get('/manageActivities', async(req,res) => {
         .sort({warnings:-1});
 
         if(reportedActivities.length === 0) {
-            return res.status(404).json({message: 'Nessuna attività con segnalazioni'});
+            return res.status(204).json({message: 'Nessuna attività con segnalazioni'});
         }
         res.status(200).json(reportedActivities);
     } catch (error){

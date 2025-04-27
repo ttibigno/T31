@@ -327,7 +327,7 @@ test("PUT /private should return 200 with a valid token and valid fields", async
         .expect(200);
 })
 
-test("PUT /private should return 401 with a valid token and invalid fields", async () => {
+test("PUT /private should return 409 with a valid token and invalid fields", async () => {
     var testUsr = new User({
         name: "testUsr",
         surname: "testUsr",
@@ -343,7 +343,7 @@ test("PUT /private should return 401 with a valid token and invalid fields", asy
     return await request(app).put(api + '/private')
         .set('Authorization', 'Bearer ' + userToken)
         .send(newUser).set('Accept', 'application/json')
-        .expect(406);
+        .expect(409);
 })
 
 test("PUT /private should return 401 with a valid token and no fields", async () => {
