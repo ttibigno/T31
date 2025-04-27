@@ -376,7 +376,7 @@ paths:
           description: 'Invalid token or credentials'
         '404':
           description: 'User not found'
-        '406':
+        '409':
           description: 'Username or mail already in use'
         '500':
           description: 'Server error'

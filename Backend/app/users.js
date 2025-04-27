@@ -159,7 +159,7 @@ router.put('/private', async (req, res) => {
     //errore di unicità : username e email devono essere unici
     //https://www.mongodb.com/community/forums/t/e11000-duplicate-key-error-collection/14141
       if (error.code === 11000) {
-        return res.status(406).json({ error: 'Username o email già in uso.' });
+        return res.status(409).json({ error: 'Username o email già in uso.' });
       }
       console.error(error);
       res.status(500).json({ error:'Errore interno del server.' });
