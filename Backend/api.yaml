@@ -115,7 +115,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Activity'
-        '205':
+        '204':
           description: 'No activity with warnings found'
         '401':
           description: 'Invalid token or credentials'
