@@ -5,12 +5,12 @@ const cors = require('cors')
 const app = express();
 
 // external Router() module "activities"
-const activityRoutes = require('./activities')
-const authRoutes = require('./auth')
-const usersRoutes = require('./users')
-const adminRoutes = require('./admin')
-const joinRoutes = require('./join')
-const reportRoutes = require('./report')
+const activityRoutes = require('./routers/activities')
+const authRoutes = require('./routers/auth')
+const usersRoutes = require('./routers/users')
+const adminRoutes = require('./routers/admin')
+const joinRoutes = require('./routers/join')
+const reportRoutes = require('./routers/report')
 
 // cors
 app.use(cors())
