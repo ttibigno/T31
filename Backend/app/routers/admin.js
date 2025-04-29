@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Activity = require('./model/activity');
-const User = require('./model/user');
-const Admin= require('./model/admin');
-const {isIDValid} = require('./security/checks');
-const {authenticateToken} = require('./security/verification');
-const {verifyAdmin} = require('./security/verification');
+const Activity = require('../model/activity');
+const User = require('../model/user');
+const Admin= require('../model/admin');
+const {isIDValid} = require('../security/checks');
+const {authenticateToken} = require('../security/verification');
+const {verifyAdmin} = require('../security/verification');
 
 router.use((req, res, next) => {
     authenticateToken(req, res, () => {

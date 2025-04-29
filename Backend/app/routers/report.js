@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Activity = require('./model/activity');
-const Report = require('./model/report');
-const {isIDValid, userReported} = require('./security/checks');
-const {authenticateToken} = require('./security/verification');
+const Activity = require('../model/activity');
+const Report = require('../model/report');
+const {isIDValid, userReported} = require('../security/checks');
+const {authenticateToken} = require('../security/verification');
 
 // segnala un'attività
 router.put('/:id', authenticateToken, async( req, res) => {

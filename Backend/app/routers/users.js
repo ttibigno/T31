@@ -1,9 +1,9 @@
 const express= require('express');
-const {authenticateToken} = require('./security/verification');
-const User = require('./model/user');
+const {authenticateToken} = require('../security/verification');
+const User = require('../model/user');
 const router = express.Router();
-const Activity= require('./model/activity');
-const {isIDValid} = require('./security/checks');
+const Activity= require('../model/activity');
+const {isIDValid} = require('../security/checks');
 
 router.use((req, res, next) => {
     console.log(`Routing to /users${req.url}`);

@@ -1,4 +1,4 @@
-const app = require('./app/app.js'); //express app module
+const app = require('./app//app.js'); //express app module
 const mongoose = require('mongoose'); 
 require('dotenv').config(); // .env file support for private KEYS
 // Usage: https://www.npmjs.com/package/dotenv#%EF%B8%8F-usage

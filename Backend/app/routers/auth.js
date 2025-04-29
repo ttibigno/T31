@@ -1,9 +1,10 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('./model/user');
+const User = require('../model/user');
 const router = express.Router();
-const salt = require("./security/salt")
+const salt = require("../security/salt")
+const Admin = require('../model/admin');
 
 router.post('/register', async(req,res)=>{
    const{name, surname, email, username, password} = req.body;
@@ -31,8 +32,13 @@ router.post('/login', async(req,res) => {
             return res.status(401).json({ message:'Credenziali non valide' });
         }
 
+        // Controlla se l'utente è un admin
+        const isAdmin = await Admin.findOne({ userId: user._id });
+
         const token = jwt.sign({ id: user._id, username: user.username}, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '1h' });
-        res.status(200).json({ accessToken: token });
+        res.status(200).json({ accessToken: token,
+            isAdmin: isAdmin ? true : false
+         });
 
     } catch (err) {
         res.status(500).json({ message:'Errore durante il login', error: err });

@@ -1,5 +1,5 @@
-const Activity = require('./model/activity')
-const User = require('./model/user')
+const Activity = require('../model/activity')
+const User = require('../model/user')
 const express = require('express');
 var mongoose = require('mongoose');
 // https://expressjs.com/en/5x/api.html#router

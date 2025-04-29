@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Activity = require('./model/activity.js');
-const Participation = require('./model/participation.js');
-const {authenticateToken} = require('./security/verification');
-const {isIDValid, userJoined, checkTime} = require('./security/checks');
+const Activity = require('../model/activity.js');
+const Participation = require('../model/participation.js');
+const {authenticateToken} = require('../security/verification.js');
+const {isIDValid, userJoined, checkTime} = require('../security/checks.js');
 
 //partecipa a un'attività
 router.put('/:id', authenticateToken, async (req, res) => {
@@ -63,6 +63,9 @@ router.get('', authenticateToken, async( req, res) =>{
         let activities = await Participation.find({ userId: userId });
         activities = await Promise.all(activities.map(async (activity) => {
             let act = await Activity.findById(activity.activityId);
+            if (act == null) {
+                return null;
+            }
             return {
                 id: act._id,
                 name: act.name,
