@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen bg-gray-800 flex flex-col justify-center items-center">
     <form @submit.prevent="handleActivity" class="bg-white p-10 rounded-lg shadow-lg w-96">
-      <h1 class="text-2xl font-bold mb-6 text-gray-700 text-center">Create Activity</h1>
+      <h1 class="text-2xl font-bold mb-6 text-gray-700 text-center">Crea Attività</h1>
 
       <!-- Titolo attività -->
       <div class="mb-4">
-        <label for="name" class="block text-gray-600 font-medium">Activity Title</label>
+        <label for="name" class="block text-gray-600 font-medium">Nome Attività</label>
         <input 
           type="text" 
           id="name" 
@@ -18,11 +18,11 @@
 
       <!-- Luogo -->
       <div class="mb-4">
-        <label for="place" class="block text-gray-600 font-medium">Place</label>
+        <label for="place" class="block text-gray-600 font-medium">Luogo</label>
         <input 
           id="place" 
           v-model="place" 
-          placeholder="Add the Google Maps link"
+          placeholder="Ex: Piazza Dante, TN, Trento"
           class="w-full border rounded-lg px-4 py-2 mt-2"
         />
       </div>
@@ -139,8 +139,8 @@ export default {
     },
 
 async handleActivity() {
-  if (!this.name || !this.datetime) {
-    alert('Please fill in all required fields.');
+  if (!this.name || !this.datetime || !this.topics || !this.maxSlot) {
+    alert('Riempi tutti i campi.');
     return;
   }
 

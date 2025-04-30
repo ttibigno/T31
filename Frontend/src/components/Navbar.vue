@@ -1,7 +1,9 @@
 <template>
     <nav :class="['fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between py-4 px-6 bg-black']">
         <div class="flex items-center w-full max-w-7xl mx-32">
-            <a class="text-2xl font-bold text-zinc-100">AroundYou</a>
+            <router-link to="/0" class="text-2xl font-bold text-zinc-100">
+            AroundYou
+            </router-link>
 
             <ul class="flex space-x-4 ml-auto text-zinc-100">
                 <li v-for="(page, index) in publishedPages" :key="index">

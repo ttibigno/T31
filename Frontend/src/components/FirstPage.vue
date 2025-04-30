@@ -1,24 +1,34 @@
 <template>
-  <div class="map-container">
-      <!-- Mappa -->
-      <div class="absolute left-0 w-full h-full z-0">
-        <MapComponent 
-            :activities="filteredActivities" 
-            :focusedActivity="focusedActivity"
-            class="h-full w-full"
-            />
-      </div>
-      <!-- Lista eventi sopra la mappa -->
-<!-- Dopo -->
-    <div class="absolute top-32 left-4 md:left-8 z-10 max-w-md">
-    <SideEvents 
-        :activities="filteredActivities" 
-        @updated-activities="updateActivities"
-        @focus-activity="focusedActivity = $event"
-    />
+  <div class="map-container relative flex flex-col">
+
+    <div class="absolute top-16 left-0 w-full z-20">
+      <Topics :topics="topics" @topic-filtered="updateActivities" />
     </div>
+
+
+    <div class="relative flex-1">
+      <!-- Mappa assoluta -->
+      <div class="absolute inset-0 z-0">
+        <MapComponent 
+          :activities="filteredActivities" 
+          :focusedActivity="focusedActivity"
+          class="h-full w-full"
+        />
+      </div>
+
+      <div class="absolute top-44 left-4 md:left-8 z-10 max-w-md">
+        <SideEvents 
+          :activities="filteredActivities" 
+          @updated-activities="updateActivities"
+          @focus-activity="focusedActivity = $event"
+        />
+      </div>
+    </div>
+    
   </div>
 </template>
+
+
 
 
 
@@ -78,7 +88,7 @@ export default {
 
 <style scoped>
 .map-container {
-  height: calc(100vh - 64px);
+  height: 100vh;
   margin-top: 0;
 }
 
@@ -136,5 +146,11 @@ export default {
 
 .overflow-y-auto {
   overflow-y: auto;
+}
+
+.topics-bar {
+  height: 64px; /* o l'altezza effettiva dei tuoi Topics */
+  background-color: #cbd5e1; /* slate-400 come nel tuo esempio */
+  z-index: 10;
 }
 </style>

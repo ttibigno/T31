@@ -1,0 +1,22 @@
+[
+    {
+        "name" : "sport",
+        "photo" : "/icons8-football-50-2.png"
+    },
+    {
+        "name" : "arte",
+        "photo" : "/icons8-art-50-2.png"
+    },
+    {
+        "name" : "musica",
+        "photo" : "/icons8-musical-50-2.png"
+    },
+    {
+        "name" : "film",
+        "photo" : "/icons8-film-50-2.png"
+    },
+    {
+        "name" : "natura",
+        "photo" : "/icons8-plant-50-2.png"
+    }
+]

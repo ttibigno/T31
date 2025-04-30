@@ -28,6 +28,9 @@
             >
                 Login
             </button>
+            <div class="img-container" >
+            <img src=".././assets/icons8-logo-di-google-48.png" class="mx-auto w-8 h-8">
+            </div>            
             <p class="mt-6 text-sm text-center text-gray-600">
                 Non hai un account?
                 <router-link to="/register" class="text-indigo-600 font-bold">Registrati</router-link>
@@ -48,7 +51,7 @@ export default {
     data() {
         return {
             username: '',  
-            password: ''  
+            password: '',
         };
     },
     methods: {
@@ -56,27 +59,37 @@ export default {
         const result = await loginUser(this.username, this.password);
         if (result.success) {
             try {
-                const decoded = jwtDecode(localStorage.getItem('authToken'));
-                const isAdmin = !!decoded.adminID;
-                localStorage.setItem('userRole', isAdmin ? 'admin' : 'user');
+                const role = localStorage.getItem('role');
+                console.log(role);
+
+                eventBus.emit('loginSuccess'); 
+
+                if (role === "true") {
+                    this.$router.push('/AdminBoard');
+                } else {
+                    this.$router.push('/dashboard');
+                }
+
             } catch (e) {
                 console.error('Error decoding token:', e);
                 alert('Errore nella elaboreazione dell`accesso');
                 return;
             }
-
-        eventBus.emit('loginSuccess'); 
-
-        if (localStorage.getItem('userRole') === 'admin') {
-            this.$router.push('/AdminBoard');
         } else {
-            this.$router.push('/dashboard');
+            alert('Login fallito');
         }
-    } else {
-        alert('Login fallito');
-    }
 }
 
 }
 };
 </script>
+
+<style scoped>
+.img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top : 28px;
+}
+</style>
+

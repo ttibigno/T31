@@ -19,11 +19,11 @@ export async function loginUser(username, password) {
             };
         }
 
-        // Se il token è presente, salvalo
         if (data.accessToken) {
             localStorage.setItem('authToken', data.accessToken);
             console.log('Token salvato in localStorage:', data.accessToken);
-            return { success: true }; // Login riuscito
+            localStorage.setItem('role', data.isAdmin);
+            return { success: true };
         } else {
             return {
                 success: false,
@@ -73,7 +73,7 @@ export async function CreateActivity(name, topic, place, date, maxSlot) {
         console.error('Invalid input provided for activity creation.');
         return {
             success: false,
-            message: 'Please provide valid inputs for all fields.',
+            message: 'Insersci valori in tutti i campi',
         };
     }
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen bg-gray-800 flex flex-col justify-center items-center">
+    <div class="min-h-screen bg-gray-800 flex flex-col justify-center items-center mt-8">
         <form @submit.prevent="handleRegister" class="bg-white p-10 rounded-lg shadow-lg w-96">
             <h1 class="text-2xl font-bold mb-6 text-gray-700 text-center">Register</h1>
 
@@ -64,7 +64,9 @@
             >
                 Register
             </button>
-
+            <div class="img-container" >
+            <img src=".././assets/icons8-logo-di-google-48.png" class="mx-auto w-8 h-8">
+            </div>    
             <p class="mt-4 text-sm text-center text-gray-600">
                 Already have an account?
                 <router-link to="/login" class="text-indigo-600 font-bold">Login</router-link>
@@ -102,3 +104,11 @@ export default {
     }
 }
 </script>
+<style scoped>
+.img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top : 28px;
+}
+</style>

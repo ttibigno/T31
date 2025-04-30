@@ -22,7 +22,6 @@
             <div v-if="isExpanded" class="mt-4 text-sm text-gray-600">
                 <p><span class="font-semibold text-black ">Luogo </span> {{ activity.place }}</p>
                 <p><span class="font-semibold text-black">Data :</span> {{ activity.date }}</p>
-                <p><span class="font-semibold text-black">Descrizione:</span> {{ activity.description || 'No description available' }}</p>
                 <div class="mt-4 mb-4">
                     <p class="text-sm text-gray-600">
                         L'attività si svolgerà tra: {{ timeRemaining }} giorni

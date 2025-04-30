@@ -209,10 +209,10 @@ export default {
 }
 
 .center-button {
-  position: absolute;
-  top: 690px;
-  right: 10px;
-  z-index: 4000; /* aumenta per stare sopra la mappa e i controlli */
+  position: fixed;
+  bottom: 20px; /* distanza dalla parte inferiore della finestra */
+  right: 10px;  /* distanza dalla parte destra della finestra */
+  z-index: 4000; /* per far sì che il bottone stia sopra la mappa e i controlli */
   background-color: #2d3748;
   color: white;
   padding: 10px 16px;
@@ -225,13 +225,14 @@ export default {
 }
 
 
+
 .center-button:hover {
   background-color: #4a5568;
 }
 
 .leaflet-top.leaflet-right {
-  top: 70px;
-  right: 20px;
+  top: 130px;
+  right: 4px;
 }
 
 .leaflet-control-zoom {

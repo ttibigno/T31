@@ -1,6 +1,5 @@
-
-  <template>
-  <div class="container p-6 max-w-full mx-auto flex space-x-6 bg-gray-850">
+<template>
+  <div class="container pt-20 p-6 max-w-full mx-auto flex space-x-6 bg-gray-850 ">
   <div class="w-2/3 bg-white p-4 border border-gray-200 rounded shadow-md">
       <h2 class="text-2xl font-bold mb-4">Attività Segnalate</h2>
       
@@ -15,7 +14,7 @@
             </div>
             <button 
               @click="deleteActivity(activity._id)" 
-              class="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
+              class="bg-red-600 text-white px-3 py-1 font-semibold rounded hover:bg-red-700"
             >
               Elimina
             </button>
@@ -50,9 +49,15 @@
               <td class="p-3 text-center">
                 <button
                   @click="promoteUser(user._id)"
-                  class="bg-indigo-500 text-white px-4 py-1 rounded hover:bg-indigo-700"
+                  class="bg-indigo-600 text-white px-4 py-1 font-semibold rounded hover:bg-indigo-700 mr-2"
                 >
                   Promuovi
+                </button>
+                <button
+                  @click="deleteUser(user._id)"
+                  class="bg-red-600 text-white px-4 py-1 font-semibold rounded hover:bg-red-700"
+                >
+                  Elimina
                 </button>
               </td>
             </tr>
@@ -62,7 +67,7 @@
     </div>
   </div>
 
-<div class=" p-6 w-full mx-auto flex space-x-6 bg-gray-850">
+<div class=" p-6 pt-0 w-full mx-auto flex space-x-6 bg-gray-850">
   <div class="mb-4 grid grid-cols-1 gap-6 w-full">
                 <div class="relative flex flex-col bg-clip-border rounded bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2 w-full">
                   <div class="relative bg-clip-border rounded-xl overflow-hidden bg-transparent text-gray-700 shadow-none m-0 flex items-center justify-between p-6">
@@ -84,10 +89,10 @@
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">{{ activity.name }}</td>
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">{{ activity.maxSlot - activity.remainingSlots}}</td>
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">
-                            <button @click="openEditModal(activity)" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Update</button>
+                            <button @click="openEditModal(activity)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded">Modifica</button>
                           </td>
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">
-                            <button @click="deleteActivity(activity._id)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                            <button @click="deleteActivity(activity._id)" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded">Elimina</button>
                           </td>
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">
                             <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-600 focus:ring-2 dark:bg-white-700 dark:border-gray-400" :checked="activity.completed" @change="toggleComplete(activity)" />
@@ -110,15 +115,6 @@
                           class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder="Enter activity name"
                         />
-                      </div>
-                      <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea
-                          v-model="editingActivity.description"
-                          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="Enter activity description"
-                          rows="4"
-                        ></textarea>
                       </div>
                       <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
@@ -157,7 +153,7 @@
                         </button>
                         <button
                           type="submit"
-                          class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-600 transition"
+                          class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700 transition"
                         >
                           Save
                         </button>
@@ -205,8 +201,8 @@ export default {
 
     async completeActitivy(activity){
         try{
-                await fetch(base_api + `/users/delete/${this.editingActivity.id}`, {
-                  method: 'PUT',
+                await fetch(base_api + `/users/delete/${this.activity.id}`, {
+                  method: 'DELETE',
                   headers: {
                     'Authorization': 'Bearer'+ localStorage.getItem('authToken'),
                     'Content-Type': 'application/json',
@@ -222,7 +218,7 @@ export default {
 
 
             openEditModal(activity){
-                this.editingActivity = {...activity}; //sto clonando l'attvitià
+                this.editingActivity = {...activity}; 
             },
 
             closeEditModal(){
@@ -273,7 +269,7 @@ export default {
         return;
       }
       try {
-        const response = await fetch(base_api + `admin/manageUsers/${this.searchQuery}`, {
+        const response = await fetch(base_api + `/admin/manageUsers/${this.searchQuery}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
         });
         const data = await response.json();
@@ -289,7 +285,7 @@ export default {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`
           },
         });
         const data = await response.json();
@@ -304,6 +300,34 @@ export default {
       }
     },
 
+    async deleteUser(userId){
+      const confirmed = confirm("Continuare con l'eliminazione dell'utente ?");
+
+      if(!confirmed){
+        return;
+      }
+
+      try{
+        const response = await fetch(base_api + `/admin/manageUsers/${userId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type" : "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`
+          },
+        });
+        const data = await response.json();
+        if(response.ok) {
+          this.users = this.fetchUsers();
+          alert("Eliminazione utente avvenuta con successo");
+        }
+        else{
+          alert(data.message || "Errore durante l'eliminazione");
+        }
+      }catch(error){
+          console.error("Errore nell'eliminazione", error);
+      }
+    },
+
     async fetchReportedActivities() {
   try {
     const response = await fetch(base_api + '/admin/manageActivities', {
@@ -315,14 +339,12 @@ export default {
     });
 
     if (response.status === 205) {
-      // Quando lo status è 204 (No Content), significa che non ci sono attività segnalate
-      this.activitiesReported = [];  // Imposta activities come array vuoto
+      this.activitiesReported = []; 
     } else if (response.status === 200) {
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
         this.activitiesReported = data;
       } else {
-        // Se la risposta è vuota (array vuoto)
         this.activitiesReported = [];
       }
     }
@@ -334,6 +356,11 @@ export default {
 
 
   async deleteActivity(activityId) {
+      const confirmed = confirm("Continuare con l'eliminazione dell'utente ?");
+
+      if(!confirmed){
+        return;
+      }
     try {
       const response = await fetch(base_api + `/admin/manageActivities/${activityId}`, {
         method: 'DELETE',
@@ -344,8 +371,8 @@ export default {
       });
 
       if (response.ok) {
-        this.fetchReportedActivities();
-        this.fetchMyActivities(); 
+        await this.fetchReportedActivities();
+        await this.fetchMyActivities(); 
         alert('Attività eliminata con successo');
       } else {
         const data = await response.json();

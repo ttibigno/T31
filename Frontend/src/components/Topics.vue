@@ -1,14 +1,14 @@
 <template>
-  <div class="flex justify-center p-4">
+<div class="flex justify-center w-full max-h-16 bg-slate-50 z-50">
     <div class="flex flex-wrap justify-center gap-2">
       <button
         v-for="(topic, index) in topics"
         :key="index"
-        class="middle rounded-lg w-28 h-12 font-sans text-xs font-bold uppercase text-white shadow-md transition-all hover:shadow-lg focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-        :style="{ backgroundColor: topic.color }"
+        class="middle flex-col items-center w-20 h-20 font-sans shadow-transparent ml-2"
         @click="handleTopicClick(topic)"
       >
-        {{ topic.name }}
+        <img :src="topic.photo" class="w-6 h-6 mb-1" />
+        <span class="text-sm">{{ topic.name }}</span>
       </button>
     </div>
   </div>
@@ -58,4 +58,5 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 </style>

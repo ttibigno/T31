@@ -96,7 +96,8 @@ export default {
 
         // Funzione per fare il logout
         const logout = () => {
-            localStorage.removeItem('authToken'); //tolgo il remove e aggiungo chiamata a backend
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('role');
             isAuthenticated.value = false; // Aggiorna lo stato di autenticazione
             closePopUp(); // Chiude il popup
             router.push('/0'); // Reindirizza alla pagina iniziale (login)
