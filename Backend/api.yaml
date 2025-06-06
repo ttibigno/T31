@@ -24,6 +24,13 @@ paths:
                   $ref: '#/components/schemas/Activity'
   /activities/{query}:
     get:
+      parameters:
+        - name: query
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Keyword to search activities
       description: Search a list of activities with a keyword
       summary: Search activities
       responses:
@@ -42,6 +49,12 @@ paths:
           in: header
           schema:
             type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Id of the activity to join'
       description: 'Join an activity'
       summary: 'Join activity'
       responses:
@@ -84,6 +97,12 @@ paths:
           in: header
           schema:
             type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Id of the activity to report'
       description: 'Report an activity'
       summary: 'Report activity'
       responses:
@@ -130,6 +149,12 @@ paths:
           in: header
           schema:
             type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Id of the activity to remove'
       description: 'Remove an activity'
       summary: 'Remove activity'
       responses:
@@ -150,6 +175,12 @@ paths:
           in: header
           schema:
             type: string
+        - name: query
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Username to search for users'
       description: 'Search users by username'
       summary: 'Search users by username'
       responses:
@@ -174,6 +205,12 @@ paths:
           in: header
           schema:
             type: string
+        - name: id
+          in: path
+          required: true
+          schema: 
+            type: string
+          description: 'Id of the user to promote to admin'
       description: 'Promote a user to admin'
       summary: 'Promote user'
       responses:
@@ -297,6 +334,12 @@ paths:
           in: header
           schema:
             type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Id of the activity to update'
       description: 'Update an activity'
       summary: 'Update activity'
       requestBody:
