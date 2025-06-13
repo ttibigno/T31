@@ -29,7 +29,7 @@
                 Login
             </button>
             <div class="img-container" >
-            <img src=".././assets/icons8-logo-di-google-48.png" class="mx-auto w-8 h-8">
+            <img src="../../assets/icons8-logo-di-google-48.png" class="mx-auto w-8 h-8">
             </div>            
             <p class="mt-6 text-sm text-center text-gray-600">
                 Non hai un account?
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { loginUser } from '../authService.js';
+import { loginUser } from '../../Services.js';
 import eventBus from '@/eventBus.js';
 import {jwtDecode} from 'jwt-decode';
 

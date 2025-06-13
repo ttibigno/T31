@@ -35,7 +35,7 @@
                 v-if="isAuthenticated"
                 @click="goToDashboard"
                 id="dashboard"
-                class="w-full bg-blue-700 hover:bg-indigo-900 text-white py-2 px-4 rounded-full "
+                class="w-full bg-blue-700 hover:bg-indigo-900 text-white py-2 px-4 rounded-full"
                 type="button"
             >
                 Dashboard
@@ -54,74 +54,80 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import eventBus from '@/eventBus';
 
 export default {
     setup() {
         const router = useRouter();
-        // Stati reattivi
         const IsShowPopup = ref(false);
-        const isAuthenticated = ref(false); // Stato di autenticazione
+        const isAuthenticated = ref(false);
 
-        // Funzione per mostrare/nascondere il popup
         const togglePopup = () => {
             IsShowPopup.value = !IsShowPopup.value;
         };
 
-        // Funzione per controllare se l'utente è autenticato
         const checkIsAuthenticated = () => {
             const token = localStorage.getItem('authToken');
-            isAuthenticated.value = token !== null; // Aggiorna lo stato di autenticazione
+            if (!token) {
+                isAuthenticated.value = false;
+                return;
+            }
+
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const currentTime = Math.floor(Date.now() / 1000);
+                if (payload.exp && payload.exp < currentTime) {
+                    alert("La sessione è scaduta. Verrai reindirizzato al login.");
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('role');
+                    isAuthenticated.value = false;
+                    router.push('/login');
+                    return;
+                }
+
+                isAuthenticated.value = true;
+            } catch (e) {
+                console.error("Errore nel parsing del token:", e);
+                localStorage.removeItem('authToken');
+                isAuthenticated.value = false;
+            }
         };
 
-        // Funzione per navigare alla pagina di login
         const goToLogin = () => {
             closePopUp();
-            router.push('login');
+            router.push('/login');
         };
 
-        // Funzione per navigare alla pagina di registrazione
         const goToRegister = () => {
             closePopUp();
-            router.push('register');
+            router.push('/register');
         };
 
-        // Funzione per navigare alla dashboard
         const goToDashboard = () => {
             closePopUp();
-            router.push('Dashboard');
+            router.push('/Dashboard');
         };
 
-        // Funzione per fare il logout
         const logout = () => {
             localStorage.removeItem('authToken');
             localStorage.removeItem('role');
-            isAuthenticated.value = false; // Aggiorna lo stato di autenticazione
-            closePopUp(); // Chiude il popup
-            router.push('/0'); // Reindirizza alla pagina iniziale (login)
+            isAuthenticated.value = false;
+            closePopUp();
+            router.push('/login');
         };
 
-        // Funzione per chiudere il popup
         const closePopUp = () => {
-            IsShowPopup.value = false; // Modifica lo stato del popup
+            IsShowPopup.value = false;
         };
 
-        // Controlla lo stato di autenticazione al montaggio del componente
         onMounted(() => {
-            eventBus.on('loginSuccess', ()=>{
-                isAuthenticated.value = true;
-            })
-            checkIsAuthenticated();
-        });
+            eventBus.on('loginSuccess', () => {
+                checkIsAuthenticated();
+            });
 
-        watch(isAuthenticated, (newValue) => {
-            if (newValue) {
-                closePopUp();
-            } else {
-                closePopUp();
-            }
+            checkIsAuthenticated();
         });
 
         return {

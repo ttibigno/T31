@@ -1,9 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { jwtDecode } from 'jwt-decode'; // Usa jwt-decode per decodificare il token
+import { jwtDecode } from 'jwt-decode';
 
 import CreateActivity from './components/CreateForm.vue';
-import Login from './components/LoginForm.vue';
-import Register from './components/RegisterForm.vue';
+import Login from './components/auth/LoginForm.vue';
+import Register from './components/auth/RegisterForm.vue';
 import Dashboard from './components/personal-area/Dashboard.vue';
 const Home = () => import('./components/personal-area/UserHome.vue');
 const SavedActivities = () => import('./components/personal-area/Saved.vue');

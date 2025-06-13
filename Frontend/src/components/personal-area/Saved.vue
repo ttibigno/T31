@@ -23,9 +23,9 @@
                         <tr v-for="activity in activities" :key="activity.id">
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">{{ activity.name }}</td>
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">{{ activity.date }}</td>
-                          <td class="py-3 px-5 border-b border-blue-gray-50 text-center">{{ activity.location }}</td>
+                          <td class="py-3 px-5 border-b border-blue-gray-50 text-center">{{ activity.place }}</td>
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">
-                            <button @click="report(activity)" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Report</button>
+                            <button @click="report(activity)" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Riporta</button>
                           </td>
                         </tr>
                       </tbody>

@@ -5,7 +5,7 @@
         <div class="flex flex-col text-black transition-opacity duration-300">
             <h2 class="font-medium text-xl">{{ activity.name }}</h2>
             <span class="block text-sm mb-1">
-                created by <span class="font-semibold text-indigo-700">{{ activity.creator }}</span>
+                creato da <span class="font-semibold text-indigo-700">{{ activity.creator }}</span>
             </span>
 
             <div class="absolute top-4 right-4 z-10">
@@ -37,7 +37,7 @@
                         @click="saveActivity"
                         :disabled="isSaving"
                     >
-                        {{ isSaving ? 'Saving...' : 'Save' }}
+                        {{ isSaving ? 'Salvattaggio...' : 'Salva' }}
                     </button>
 
                     <button
@@ -56,7 +56,11 @@
 </template>
 
 <script>
-const base_url = "http://localhost:8000/api/v2";
+    const base_url = "http://localhost:8000/api/v2";
+    import VueDatePicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css';
+    import { format } from 'date-fns';
+    import { utcToZonedTime } from 'date-fns-tz';
 export default {
     props: {
         activity: {

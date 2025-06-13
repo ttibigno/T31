@@ -1,10 +1,10 @@
 <template>
     <div class="min-h-screen bg-gray-800 flex flex-col justify-center items-center mt-8">
         <form @submit.prevent="handleRegister" class="bg-white p-10 rounded-lg shadow-lg w-96">
-            <h1 class="text-2xl font-bold mb-6 text-gray-700 text-center">Register</h1>
+            <h1 class="text-2xl font-bold mb-6 text-gray-700 text-center">Registrazione utente</h1>
 
             <div class="mb-4">
-                <label for="name" class="block text-gray-600 font-medium">Name</label>
+                <label for="name" class="block text-gray-600 font-medium">Nome</label>
                 <input
                     v-model="name"
                     type="text"
@@ -15,7 +15,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="surname" class="block text-gray-600 font-medium">Surname</label>
+                <label for="surname" class="block text-gray-600 font-medium">Cognome</label>
                 <input
                     v-model="surname"
                     type="text"
@@ -65,7 +65,7 @@
                 Register
             </button>
             <div class="img-container" >
-            <img src=".././assets/icons8-logo-di-google-48.png" class="mx-auto w-8 h-8">
+            <img src="../../assets/icons8-logo-di-google-48.png" class="mx-auto w-8 h-8">
             </div>    
             <p class="mt-4 text-sm text-center text-gray-600">
                 Already have an account?
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { registerUser } from '@/authService';  // Assicurati che la funzione registerUser sia importata correttamente
+import { registerUser } from '@/Services';  // Assicurati che la funzione registerUser sia importata correttamente
 
 export default {
     data() {

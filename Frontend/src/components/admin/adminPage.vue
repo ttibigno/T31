@@ -77,11 +77,11 @@
                     <table class="w-full min-w-[640px] table-auto">
                       <thead>
                         <tr>
-                          <th class="border-b border-blue-gray-50 py-3 px-6 text-center">Name</th>
-                          <th class="border-b border-blue-gray-50 py-3 px-6 text-center">Participants</th>
-                          <th class="border-b border-blue-gray-50 py-3 px-6 text-center">Update</th>
-                          <th class="border-b border-blue-gray-50 py-3 px-6 text-center">Delete</th>
-                          <th class="border-b border-blue-gray-50 py-3 px-6 text-center">Completed</th>
+                          <th class="border-b border-blue-gray-50 py-3 px-6 text-center">Nome</th>
+                          <th class="border-b border-blue-gray-50 py-3 px-6 text-center">Partecipanti</th>
+                          <th class="border-b border-blue-gray-50 py-3 px-6 text-center">Aggiorna</th>
+                          <th class="border-b border-blue-gray-50 py-3 px-6 text-center">Elimina</th>
+                          <th class="border-b border-blue-gray-50 py-3 px-6 text-center">Terminata</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -89,13 +89,19 @@
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">{{ activity.name }}</td>
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">{{ activity.maxSlot - activity.remainingSlots}}</td>
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">
-                            <button @click="openEditModal(activity)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded">Modifica</button>
+                            <button @click="openEditModal(activity)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded" :disabled="activity.ended">Modifica</button>
                           </td>
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">
-                            <button @click="deleteActivity(activity._id)" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded">Elimina</button>
+                            <button @click="deleteActivity(activity._id)" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded" :disabled="activity.ended">Elimina</button>
                           </td>
                           <td class="py-3 px-5 border-b border-blue-gray-50 text-center">
-                            <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-600 focus:ring-2 dark:bg-white-700 dark:border-gray-400" :checked="activity.completed" @change="toggleComplete(activity)" />
+                          <input
+                              type="checkbox"
+                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                              :checked="activity.ended"
+                              disabled
+                            />
+                            {{activity.ended ? " Terminata" : " In corso"}}
                           </td>
                         </tr>
                       </tbody>
@@ -127,11 +133,13 @@
                       </div>
                       <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                        <input
+                        <Vue-DatePicker 
                           v-model="editingActivity.date"
-                          type="date"
-                          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="Enter date location"
+                          format="yyyy-MM-dd HH:mm"
+                          :show-time="true"
+                          :min-date="minDate"
+                          class="w-full border rounded-lg px-4 py-2 mt-2"
+                          required
                         />
                       </div>
                       <div class="mb-4">
@@ -167,8 +175,15 @@
 </template>
 
 <script>
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import { format } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 const base_api = "http://localhost:8000/api/v2";
 export default {
+  components: {
+          VueDatePicker,
+        },
   data() {
     return {
       users: [],

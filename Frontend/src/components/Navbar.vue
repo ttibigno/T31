@@ -19,7 +19,7 @@
                         to="/createActivity"
                         class="nav-link"
                         aria-current="page"
-                    >Create Activity</router-link>
+                    >Crea attività</router-link>
                 </li>
             </ul>
 

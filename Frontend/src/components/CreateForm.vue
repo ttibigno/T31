@@ -10,7 +10,7 @@
           type="text" 
           id="name" 
           v-model="name" 
-          placeholder="Enter the Activity title"
+          placeholder="Dai un titolo all'attività"
           class="w-full border rounded-lg px-4 py-2 mt-2"
           required 
         />
@@ -34,7 +34,7 @@
           <input 
             type="text" 
             v-model="newTopic"
-            placeholder="Add a topic"
+            placeholder="Aggiungi un topic"
             class="w-full border rounded-lg px-4 py-2"
           />
           <button 
@@ -65,12 +65,12 @@
 
       <!-- Max numero partecipanti -->
       <div class="mb-4">
-        <label for="maxSlot" class="block text-gray-600 font-medium">Max number participants</label>
+        <label for="maxSlot" class="block text-gray-600 font-medium">Numero massimo di partecipanti</label>
         <input 
           type="number" 
           id="maxSlot" 
           v-model="maxSlot" 
-          placeholder="Max slot"
+          placeholder="Numero di posti"
           class="w-full border rounded-lg px-4 py-2 mt-2"
           min="1"
           required
@@ -79,7 +79,7 @@
 
       <!-- Data e ora dell'attività -->
       <div class="mb-4">
-        <label for="datetime" class="block text-gray-600 font-medium">Date and Time of the event</label>
+        <label for="datetime" class="block text-gray-600 font-medium">Data e ora dell'attività</label>
         <Vue-DatePicker 
           v-model="datetime"
           format="yyyy-MM-dd HH:mm"
@@ -96,7 +96,7 @@
         class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
         :disabled="isSubmitting"
       >
-        {{ isSubmitting ? 'Creating...' : 'Create Activity' }}
+        {{ isSubmitting ? 'Creando...' : 'Crea attività' }}
       </button>
     </form>
   </div>
@@ -105,7 +105,7 @@
 <script>
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import { CreateActivity } from '@/authService.js';
+import { CreateActivity } from '@/Services.js';
 import { format } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 
