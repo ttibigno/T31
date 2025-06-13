@@ -145,15 +145,8 @@ async handleActivity() {
   }
 
   const date = new Date(this.datetime);
-  // Convertiamo la data alla zona di Roma (fuso orario Europe/Rome)
-  const options = { timeZone: 'Europe/Rome', hour12: false };
-  const romeDatetime = date.toLocaleString('en-US', options);
-
-  // Log per vedere se toLocaleString funziona
-  console.log("Rome DateTime:", romeDatetime);
-
-  // Inizializza il formato
-  const formattedDatetime = romeDatetime.replace(',', '');
+  
+  const formattedDatetime = date.toISOString();
 
   this.isSubmitting = true;
 
@@ -161,14 +154,14 @@ async handleActivity() {
     const result = await CreateActivity(this.name, this.topics, this.place, formattedDatetime, this.maxSlot);
 
     if (result.success) {
-      alert('Activity created successfully!');
+      alert('Attività creata con successo!');
       this.$router.push('/0');
     } else {
-      alert('Failed to create activity');
+      alert('Creazione fallita');
     }
   } catch (error) {
     console.error('Error creating activity:', error);
-    alert('An unexpected error occurred.');
+    alert('Errore del sistema.');
   } finally {
     this.isSubmitting = false;
   }
