@@ -68,8 +68,8 @@ export async function registerUser(name, surname, username, email, password) {
     }
 }
 
-export async function CreateActivity(name, topics, place, date, maxSlot) {
-    if (!name || !topics || !place || !date || maxSlot <= 0) {
+export async function CreateActivity(name, topic, place, date, maxSlot) {
+    if (!name || !topic || !place || !date || maxSlot <= 0) {
         console.error('Invalid input provided for activity creation.');
         return {
             success: false,
@@ -84,7 +84,7 @@ export async function CreateActivity(name, topics, place, date, maxSlot) {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('authToken'),
             },
-            body: JSON.stringify({ name, topics, place, date, maxSlot }),
+            body: JSON.stringify({ name, topic, place, date, maxSlot }),
         });
 
         const data = await response.json();
