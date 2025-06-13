@@ -143,11 +143,11 @@ async handleActivity() {
     alert('Riempi tutti i campi.');
     return;
   }
-
+  
   const date = new Date(this.datetime);
   
   const formattedDatetime = date.toISOString();
-
+  console.log(this.name, formattedDatetime, this.topics, this.maxSlot);
   this.isSubmitting = true;
 
   try {
