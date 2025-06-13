@@ -27,7 +27,7 @@ router.get('/activities', async( req, res) => {
 //Crea le proprie attività
 router.post('/activities', async (req, res) => {
   const creator = req.user.username;
-  const { name, topic, place, date, maxSlot, contacts } = req.body;
+  const { name, topic, place, date, maxSlot } = req.body;
   if (!name || !topic || !place || !date || !maxSlot) {
     return res.status(400).json({ message: 'Tutti i campi sono obbligatori!' });
     }
