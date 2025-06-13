@@ -179,7 +179,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { format } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
-const base_api = "http://localhost:8000/api/v2";
+const base_api = "https://backend-aroundyou.onrender.com/api/v2";
 export default {
   components: {
           VueDatePicker,

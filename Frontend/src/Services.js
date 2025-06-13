@@ -1,4 +1,4 @@
-const base_api = "http://localhost:8000/api/v2";
+const base_api = "https://backend-aroundyou.onrender.com/api/v2";
 export async function loginUser(username, password) {
     try {
         const response = await fetch(base_api + '/auth/login', {

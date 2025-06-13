@@ -56,7 +56,7 @@
 </template>
 
 <script>
-    const base_url = "http://localhost:8000/api/v2";
+    const base_url = "https://backend-aroundyou.onrender.com/api/v2";
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
     import { format } from 'date-fns';

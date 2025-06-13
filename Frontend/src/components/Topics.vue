@@ -34,7 +34,7 @@ export default {
   methods: {
     async handleTopicClick(topic) {
       try {
-        const res = await fetch(`http://localhost:8000/api/v2/activities/${topic.name}`);
+        const res = await fetch(`https://backend-aroundyou.onrender.com/api/v2/activities/${topic.name}`);
         if (res.ok) {
           const result = await res.json();
           this.filteredActivities = result;

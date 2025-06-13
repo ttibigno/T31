@@ -30,7 +30,7 @@ export default {
     methods: {
         async querieddActivities(){
             try{
-                const res = await fetch(`http://localhost:8000/api/v2/activities/${this.query}`);
+                const res = await fetch(`https://backend-aroundyou.onrender.com/api/v2/activities/${this.query}`);
                 if(res.ok){
                     const result = await res.json();
                     this.filteredActivities = result;

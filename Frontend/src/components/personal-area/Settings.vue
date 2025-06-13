@@ -71,7 +71,7 @@ export default {
   methods: {
     async fetchUserData() {
       try {
-        const response = await fetch('http://localhost:8000/api/v2/users/private', {
+        const response = await fetch('https://backend-aroundyou.onrender.com/api/v2/users/private', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -94,7 +94,7 @@ export default {
     },
     async saveChanges() {
       try {
-        const response = await fetch('http://localhost:8000/api/v2/users/private', {
+        const response = await fetch('https://backend-aroundyou.onrender.com/api/v2/users/private', {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -125,7 +125,7 @@ export default {
         const confirmDelete = confirm('Sei sicuro di voler eliminare il tuo profilo?');
         if (!confirmDelete) return;
 
-        const response = await fetch('http://localhost:8000/api/v2/users/private', {
+        const response = await fetch('https://backend-aroundyou.onrender.com/api/v2/users/private', {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
