@@ -14,12 +14,12 @@ router.post('/register', async(req,res)=>{
     try {
         const newUser = new User({ name, surname, email, username, password: await salt(password) });
         await newUser.save();
-        res.status(201).json({ message: `Utente registrato con successo` });
+        res.status(201).json({ message: `Utente registrato con successo`, success: true });
     } catch (err) {
         if (err.code === 11000) {
             return res.status(409).json({ message: 'Nome utente o email già in uso', success: false});
         }
-        res.status(500).json({ message: 'Errore durante la registrazione', error: err });
+        res.status(500).json({ message: 'Errore durante la registrazione', error: err, success: false });
     }
 });
 
