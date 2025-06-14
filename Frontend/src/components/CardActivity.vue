@@ -152,11 +152,16 @@ methods: {
                     alert('Activity joined successfully');
                 } else {
                     const errorData = await res.json();
-                    alert(`Error: ${errorData.message || 'Failed to join activity'}`);
+                    alert(`Error: ${errorData.message || 'Fallito il join'}`);
                 }
             } catch (e) {
-                console.error('Error saving activity:', e);
-                alert('An unexpected error occurred while saving the activity');
+                if(localStorage.getItem('authToken') === null){
+                    alert("Non hai eseguito l'accesso! Verrai redirezionato...");
+                    this.$router.push('/login');
+                }
+                else{
+                    alert("Partecipi già alla attività")
+                }
             } finally {
                 this.isSaving = false;
             }
@@ -174,14 +179,20 @@ methods: {
                 });
 
                 if (res.ok) {
-                    alert("Activity reported successfully");
+                    alert("Attività riportata con successo! Verrai redirezionato...");
                 } else {
                     const errorData = await res.json();
-                    alert(`Error: ${errorData.message || 'Failed to report activity'}`);
+                    alert(`Error: ${errorData.message || 'Errore durante il riportaggio'}`);
                 }
             } catch (e) {
                 console.error('Error reporting activity:', e);
-                alert('An unexpected error occurred while reporting the activity');
+                if(localStorage.getItem('authToken') === null){
+                    alert("Non hai eseguito l'accesso!");
+                    this.$router.push('/login');
+                }
+                else{
+                    alert("Hai già eseguito il report");
+                }
             } finally {
                 this.isReporting = false;
             }
