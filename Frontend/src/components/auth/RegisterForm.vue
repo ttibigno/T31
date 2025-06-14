@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { registerUser } from '@/Services';  // Assicurati che la funzione registerUser sia importata correttamente
+import { registerUser } from '../../Services';  // Assicurati che la funzione registerUser sia importata correttamente
 
 export default {
     data() {
@@ -101,15 +101,13 @@ export default {
             // Chiamata al servizio per la registrazione
             const result = await registerUser(this.name, this.surname, this.username, this.email, this.password);
 
-            if (result.success === 'true) {
-                alert(result.message);
+            if (result.success === 'true') {
+                alert(result.message || 'Registrazione avvenuta con successo!');
                 this.$router.push('/0');
             } else {
-                // In caso di errore, mostra un messaggio di errore
                 alert(result.message || 'Registrazione fallita!');
             }
         }
-
     },
 
     computed: {
