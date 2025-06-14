@@ -149,7 +149,7 @@ methods: {
                 });
 
                 if (res.ok) {
-                    alert('Activity joined successfully');
+                    alert('Attività eseguita con successo');
                 } else {
                     const errorData = await res.json();
                     alert(`Error: ${errorData.message || 'Fallito il join'}`);
@@ -179,7 +179,7 @@ methods: {
                 });
 
                 if (res.ok) {
-                    alert("Attività riportata con successo! Verrai redirezionato...");
+                    alert("Attività riportata con successo!");
                 } else {
                     const errorData = await res.json();
                     alert(`Error: ${errorData.message || 'Errore durante il riportaggio'}`);
@@ -187,7 +187,7 @@ methods: {
             } catch (e) {
                 console.error('Error reporting activity:', e);
                 if(localStorage.getItem('authToken') === null){
-                    alert("Non hai eseguito l'accesso!");
+                    alert("Non hai eseguito l'accesso! Verrai redirezionato...");
                     this.$router.push('/login');
                 }
                 else{
