@@ -9,8 +9,9 @@
           <li v-for="(activity, index) in activitiesReported" :key="index" class="p-4 border-b flex justify-between items-center">
             <div>
               <h3 class="font-semibold text-xl">{{ activity.name }}</h3>
-              <p>{{ activity.date }}</p>
-              <p>{{ activity.creator }}</p>
+              <p>Data: {{ activity.date }}</p>
+              <p>Creator: {{ activity.creator }}</p>
+              <p>Segnalazioni: {{ activity.warnings }}</p>
             </div>
             <button 
               @click="deleteActivity(activity._id)" 
@@ -45,7 +46,7 @@
           </thead>
           <tbody>
             <tr v-for="(user, index) in users" :key="index" class="border-b">
-              <td class="p-3">{{ user.name }}</td>
+              <td class="p-3">{{ user.username }}</td>
               <td class="p-3 text-center">
                 <button
                   @click="promoteUser(user._id)"
@@ -111,10 +112,10 @@
             
                 <div v-if="editingActivity" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                   <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-                    <h2 class="text-lg font-semibold mb-4 text-center text-gray-800">Editing Model</h2>
+                    <h2 class="text-lg font-semibold mb-4 text-center text-gray-800">Modifica</h2>
                     <form @submit.prevent="saveUpdateActivity">
                       <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
                         <input
                           v-model="editingActivity.name"
                           type="text"
@@ -123,7 +124,7 @@
                         />
                       </div>
                       <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Luogo</label>
                         <input
                           v-model="editingActivity.place"
                           type="text"
@@ -132,7 +133,7 @@
                         />
                       </div>
                       <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Data</label>
                         <Vue-DatePicker 
                           v-model="editingActivity.date"
                           format="yyyy-MM-dd HH:mm"
@@ -143,7 +144,7 @@
                         />
                       </div>
                       <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Participants</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Partecipanti</label>
                         <input
                           v-model="editingActivity.maxSlot"
                           type="number"

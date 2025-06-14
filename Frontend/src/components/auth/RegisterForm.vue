@@ -9,7 +9,7 @@
                     v-model="name"
                     type="text"
                     id="name"
-                    placeholder="Choose a name"
+                    placeholder="Name"
                     class="w-full border rounded-lg px-4 py-2 mt-2"
                 />
             </div>
@@ -20,7 +20,7 @@
                     v-model="surname"
                     type="text"
                     id="surname"
-                    placeholder="Choose a surname"
+                    placeholder="Cognome"
                     class="w-full border rounded-lg px-4 py-2 mt-2"
                 />
             </div>
@@ -31,7 +31,7 @@
                     v-model="username"
                     type="text"
                     id="username"
-                    placeholder="Choose a username"
+                    placeholder="Scegli uno username"
                     class="w-full border rounded-lg px-4 py-2 mt-2"
                 />
             </div>
@@ -42,7 +42,7 @@
                     v-model="email"
                     type="email"
                     id="email"
-                    placeholder="Enter your email"
+                    placeholder="Inserisci la email"
                     class="w-full border rounded-lg px-4 py-2 mt-2"
                 />
             </div>
@@ -53,14 +53,21 @@
                     v-model="password"
                     type="password"
                     id="password"
-                    placeholder="Enter a password"
-                    class="w-full border rounded-lg px-4 py-2 mt-2"
+                    placeholder="Inserisci una password"
+                    :class="['w-full border rounded-lg px-4 py-2 mt-2', isPasswordValid ? 'border-gray-300' : 'border-red-500']"
                 />
+                <p v-if="password && !isPasswordValid" class="text-red-500 text-sm mt-1">
+                    La password deve avere almeno 8 caratteri, una lettera maiuscola e un carattere speciale.
+                </p>
             </div>
 
             <button
                 type="submit"
-                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg mt-4"
+                :disabled="!isPasswordValid"
+                :class="[
+                    'w-full text-white py-2 px-4 rounded-lg mt-4',
+                    isPasswordValid ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-700 cursor-not-allowed'
+                ]"
             >
                 Register
             </button>
@@ -88,6 +95,7 @@ export default {
             password: ''
         };
     },
+
     methods: {
         async handleRegister() {
             // Chiamata al servizio per la registrazione
@@ -101,7 +109,17 @@ export default {
                 alert(result.message || 'Registrazione fallita!');
             }
         }
+
+    },
+
+    computed: {
+    isPasswordValid() {
+        const password = this.password;
+        const regex = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
+        return regex.test(password);
     }
+}
+
 }
 </script>
 <style scoped>

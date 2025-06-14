@@ -22,6 +22,21 @@
             <div v-if="isExpanded" class="mt-4 text-sm text-gray-600">
                 <p><span class="font-semibold text-black ">Luogo </span> {{ activity.place }}</p>
                 <p><span class="font-semibold text-black">Data :</span> {{ activity.date }}</p>
+                <p><span class="font-semibold text-black ">Posti rimanenti: </span> {{ activity.remainingSlots }}</p>
+
+                <!-- Topics -->
+                <div class="flex flex-wrap gap-2 mt-3 justify-center">
+                    <span
+                        v-for="(topic, index) in activity.topic || []"
+                        :key="index"
+                        class="bg-blue-700 text-white text-xs font-semibold px-3 py-1 rounded-full"
+                    >
+                        {{ topic }}
+                    </span>
+                </div>
+                
+                <p class="text-red-600 mt-3"> Segnalazioni: {{ activity.warnings }}</p>
+
                 <div class="mt-4 mb-4">
                     <p class="text-sm text-gray-600">
                         L'attività si svolgerà tra: {{ timeRemaining }} giorni
@@ -37,7 +52,7 @@
                         @click="saveActivity"
                         :disabled="isSaving"
                     >
-                        {{ isSaving ? 'Salvattaggio...' : 'Salva' }}
+                        {{ isSaving ? 'Partecipazione...' : 'Partecipa' }}
                     </button>
 
                     <button
