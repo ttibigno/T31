@@ -49,7 +49,7 @@ export async function registerUser(name, surname, username, email, password) {
 
         const data = await response.json();
 
-        if (response.ok) {
+        if (!response.ok) {
             return {
                 success: false,
                 message: data.message || `Errore durante la registrazione (status: ${response.status})`,
