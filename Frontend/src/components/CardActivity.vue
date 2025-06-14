@@ -149,7 +149,7 @@ methods: {
                 });
 
                 if (res.ok) {
-                    alert('Hai confermato la tua partecipazione all'attività!');
+                    alert('Hai confermato la tua partecipazione alla attività!');
                 } else {
                     const errorData = await res.json();
                     alert(`Error: ${errorData.message || 'Fallito il join'}`);
