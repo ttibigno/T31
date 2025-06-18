@@ -78,7 +78,7 @@ router.put('/manageUsers/:id', async(req,res) =>{
     else return res.status(404).json({ message: 'Utente non trovato'});
 });
 
-//eliminare qualsiasi utente non admin
+//eliminare qualsiasi utente non admin e le sue attività
 router.delete('/manageUsers/:id', async(req,res) =>{
     const userId= req.params.id;
     if (await isIDValid(userId)){
@@ -91,6 +91,7 @@ router.delete('/manageUsers/:id', async(req,res) =>{
         if(admin){
             return res.status(400).json({message: 'Non puoi eliminare un admin'});
         }
+        await Activity.deleteMany({ creator: userId });
         await user.deleteOne()
         res.status(200).json({ message: 'Utente eliminato con successo'});
     } catch(err){
