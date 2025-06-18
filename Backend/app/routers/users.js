@@ -172,7 +172,7 @@ router.put('/private', async (req, res) => {
         const userId = req.user.id;
         console.log("Tentativo di eliminazione dell'utente con ID:", userId);
 
-        username = User.findById(userId).select('username');
+        username = await User.findById(userId).select('username');
         await Activity.deleteMany({ creator: username });
         await User.findByIdAndDelete(userId);
         res.status(200).json({ message: "Account eliminato con successo." });
