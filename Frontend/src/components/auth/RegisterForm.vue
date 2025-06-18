@@ -1,0 +1,130 @@
+<template>
+    <div class="min-h-screen bg-gray-800 flex flex-col justify-center items-center mt-8">
+        <form @submit.prevent="handleRegister" class="bg-white p-10 rounded-lg shadow-lg w-96">
+            <h1 class="text-2xl font-bold mb-6 text-gray-700 text-center">Registrazione utente</h1>
+
+            <div class="mb-4">
+                <label for="name" class="block text-gray-600 font-medium">Nome</label>
+                <input
+                    v-model="name"
+                    type="text"
+                    id="name"
+                    placeholder="Name"
+                    class="w-full border rounded-lg px-4 py-2 mt-2"
+                />
+            </div>
+
+            <div class="mb-4">
+                <label for="surname" class="block text-gray-600 font-medium">Cognome</label>
+                <input
+                    v-model="surname"
+                    type="text"
+                    id="surname"
+                    placeholder="Cognome"
+                    class="w-full border rounded-lg px-4 py-2 mt-2"
+                />
+            </div>
+
+            <div class="mb-4">
+                <label for="username" class="block text-gray-600 font-medium">Username</label>
+                <input
+                    v-model="username"
+                    type="text"
+                    id="username"
+                    placeholder="Scegli uno username"
+                    class="w-full border rounded-lg px-4 py-2 mt-2"
+                />
+            </div>
+
+            <div class="mb-4">
+                <label for="email" class="block text-gray-600 font-medium">Email</label>
+                <input
+                    v-model="email"
+                    type="email"
+                    id="email"
+                    placeholder="Inserisci la email"
+                    class="w-full border rounded-lg px-4 py-2 mt-2"
+                />
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="block text-gray-600 font-medium">Password</label>
+                <input
+                    v-model="password"
+                    type="password"
+                    id="password"
+                    placeholder="Inserisci una password"
+                    :class="['w-full border rounded-lg px-4 py-2 mt-2', isPasswordValid ? 'border-gray-300' : 'border-red-500']"
+                />
+                <p v-if="password && !isPasswordValid" class="text-red-500 text-sm mt-1">
+                    La password deve avere almeno 8 caratteri, una lettera maiuscola e un carattere speciale.
+                </p>
+            </div>
+
+            <button
+                type="submit"
+                :disabled="!isPasswordValid"
+                :class="[
+                    'w-full text-white py-2 px-4 rounded-lg mt-4',
+                    isPasswordValid ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-700 cursor-not-allowed'
+                ]"
+            >
+                Register
+            </button>
+            <div class="img-container" >
+            <img src="../../assets/icons8-logo-di-google-48.png" class="mx-auto w-8 h-8">
+            </div>    
+            <p class="mt-4 text-sm text-center text-gray-600">
+                Already have an account?
+                <router-link to="/login" class="text-indigo-600 font-bold">Login</router-link>
+            </p>
+        </form>
+    </div>
+</template>
+
+<script>
+import { registerUser } from '../../Services';  // Assicurati che la funzione registerUser sia importata correttamente
+
+export default {
+    data() {
+        return {
+            name: '',
+            surname: '',
+            username: '',
+            email: '',
+            password: ''
+        };
+    },
+
+    methods: {
+        async handleRegister() {
+            // Chiamata al servizio per la registrazione
+            const result = await registerUser(this.name, this.surname, this.username, this.email, this.password);
+
+            if (result.success === 'true') {
+                alert(result.message || 'Registrazione avvenuta con successo!');
+                this.$router.push('/0');
+            } else {
+                alert(result.message || 'Registrazione fallita!');
+            }
+        }
+    },
+
+    computed: {
+    isPasswordValid() {
+        const password = this.password;
+        const regex = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
+        return regex.test(password);
+    }
+}
+
+}
+</script>
+<style scoped>
+.img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top : 28px;
+}
+</style>

@@ -1,0 +1,598 @@
+openapi: 3.0.0
+info:
+  version: '2.0'
+  title: "AroundYou OpenAPi 3.0.0"
+  description: API for managing AroundYou requests
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8000/api/v2
+    description: Backend
+paths:
+  /activities:
+    get:
+      description: Get the activities from the system.
+      summary: Get all the activities.
+      responses:
+        '200':
+          description: 'Collection of activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+  /activities/{query}:
+    get:
+      parameters:
+        - name: query
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Keyword to search activities
+      description: Search a list of activities with a keyword
+      summary: Search activities
+      responses:
+        '200':
+          description: 'Collection of activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+  /join/{id}:
+    put:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Id of the activity to join'
+      description: 'Join an activity'
+      summary: 'Join activity'
+      responses:
+        '200':
+          description: 'Activity joined succesfully'
+        '400':
+          description: 'ActivityId is not valid'
+        '401':
+          description: 'Invalid token or credentials'
+        '404':
+          description: 'Activity ended or already joined'
+        '500':
+          description: 'Error on activity join'
+  /join:
+    get:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Get the list of the joined activities'
+      summary: 'Get joined activities'
+      responses:
+        '200':
+          description: 'Collection of joined activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '401':
+          description: 'Invalid token or credentials'
+        '500':
+          description: 'Server error'
+  /report/{id}:
+    put:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Id of the activity to report'
+      description: 'Report an activity'
+      summary: 'Report activity'
+      responses:
+        '200':
+          description: 'Activity reported succesfully'
+        '400':
+          description: 'Activity already reported'
+        '401':
+          description: 'Invalid token or credentials'
+        '404':
+          description: 'Activity not found'
+        '500':
+          description: 'Error on activity report'
+  /admin/manageActivities:
+    get:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Get a list of activities with warnings sorted by the most warned'
+      summary: 'Get activities with warnings'
+      responses:
+        '200':
+          description: 'Collection of activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '204':
+          description: 'No activity with warnings found'
+        '401':
+          description: 'Invalid token or credentials'
+        '403':
+          description: 'User is not an admin'
+        '500':
+          description: 'Server error'
+  /admin/manageActivities/{id}:
+    delete:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Id of the activity to remove'
+      description: 'Remove an activity'
+      summary: 'Remove activity'
+      responses:
+        '200':
+          description: 'Activity removed succesfully'
+        '401':
+          description: 'Invalid token or credentials'
+        '403':
+          description: 'User is not an admin'
+        '404':
+          description: 'Activity not found'
+        '500':
+          description: 'Error during removal'
+  /admin/manageUsers/{query}:
+    get:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+        - name: query
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Username to search for users'
+      description: 'Search users by username'
+      summary: 'Search users by username'
+      responses:
+        '200':
+          description: 'Collection of users'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: 'Invalid token or credentials'
+        '403':
+          description: 'User is not an admin'
+        '500':
+          description: 'Server error'
+  /admin/manageUsers/{id}:
+    put:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema: 
+            type: string
+          description: 'Id of the user to promote to admin'
+      description: 'Promote a user to admin'
+      summary: 'Promote user'
+      responses:
+        '200':
+          description: 'User promoted succesfully'
+        '400':
+          description: 'User is already an admin'
+        '401':
+          description: 'Invalid token or credentials'
+        '403':
+          description: 'User is not an admin'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Error during promotion'
+    delete:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Remove a user'
+      summary: 'Remove user'
+      responses:
+        '200':
+          description: 'User removed succesfully'
+        '400':
+          description: 'User is an admin'
+        '401':
+          description: 'Invalid token or credentials'
+        '403':
+          description: 'User is not an admin'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Error during removal'
+  /admin/manageUsers:
+    get:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Return the list of users'
+      summary: 'Get users'
+      responses:
+        '200':
+          description: 'Collection of users'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: 'Invalid token or credentials'
+        '403':
+          description: 'User is not an admin'
+        '500':
+          description: 'Server error'
+  
+  /users/activities:
+    get:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Get the list of activities created by the user'
+      summary: 'Get activities'
+      responses:
+        '200':
+          description: 'Collection of activities'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '204': 
+          description: 'No activities found'
+        '400':
+          description: 'Activity fields are missing'
+        '401':
+          description: 'Invalid token or credentials'
+        '500':
+          description: 'Server error'
+    post:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Post an activity'
+      summary: 'Post activity'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Activity"
+      responses:
+        '201':
+          description: 'Activity posted'
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '400':
+          description: 'Activity fields are missing'
+        '401':
+          description: 'Invalid token or credentials'
+        '500':
+          description: 'Error on creation'
+  /users/activities/{id}:
+    put:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'Id of the activity to update'
+      description: 'Update an activity'
+      summary: 'Update activity'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Activity"
+      responses:
+        '200':
+          description: 'Activity updated succesfully'
+        '401':
+          description: 'Invalid token or credentials'
+        '404':
+          description: 'Activity not found'
+        '500':
+          description: 'Error on activity update'
+    delete:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Delete an activity'
+      summary: 'Delete activity'
+      responses:
+        '200':
+          description: 'Activity deleted succesfully'
+        '401':
+          description: 'Invalid token or credentials'
+        '404':
+          description: 'Activity not found or invalid ActivityId'
+        '500':
+          description: 'Error during activity delete'
+  /users/private:
+    get:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Get the user informations'
+      summary: 'Get user informations'
+      responses:
+        '200':
+          description: 'User informations'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: 'Invalid token or credentials'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Server error'
+    put:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Update the user informations'
+      summary: 'Update user informations'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '200':
+          description: 'User informations updated'
+        '400':
+          description: 'Field not found'
+        '401':
+          description: 'Invalid token or credentials'
+        '404':
+          description: 'User not found'
+        '409':
+          description: 'Username or mail already in use'
+        '500':
+          description: 'Server error'
+    delete:
+      parameters:
+        - name: authenticateToken
+          in: header
+          schema:
+            type: string
+      description: 'Delete the user and his activities'
+      summary: 'Delete user'
+      responses:
+        '200':
+          description: 'User deleted succesfully'
+        '401':
+          description: 'Invalid token or credentials'
+        '500':
+          description: 'Server error'
+  /auth/login:
+    post:
+      description: 'Login to the system'
+      summary: 'Login'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  description: 'Username of the user'
+                password:
+                  type: string
+                  description: 'Password of the user'
+      responses:
+        '200':
+          description: 'Login successful'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: 'Token for authentication'
+        '401':
+          description: 'Invalid credentials'
+        '500':
+          description: 'Error on login'
+  /auth/register:
+    post:
+      description: 'Register to the system'
+      summary: 'Register'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '201':
+          description: 'User registered'
+        '400':
+          description: 'Missing credentials'
+        '409':
+          description: 'Username or email already in use'
+        '500':
+          description: 'Error during the creation of the user'
+    
+components:
+  schemas:
+    Activity:
+      type: object
+      required:
+        - name
+        - topic
+        - place
+        - date
+        - creator
+        - maxSlot
+      properties:
+        name:
+          type: string
+          description: 'Name of the activity'
+        topic:
+          type: array
+          default: ["string"]
+          description: 'Topics of the activity'
+        place:
+          type: string
+          description: 'Place of the activity'
+        date:
+          type: string
+          description: 'Date of the activity'
+        creator:
+          type: string
+          description: 'Username of the creator of the activity'
+        maxSlot:
+          type: integer
+          description: 'Number of total free slots of the activity'
+        remainingSlots:
+          type: integer
+          description: 'Number of remaining free slots of the activity'
+        warnings:
+          type: integer
+          description: 'Number of warnings of the activity'
+        ended:
+          type: boolean
+          default: false
+          description: "True if the activity is ended"
+    User:
+      type: object
+      required:
+        - name
+        - surname
+        - email
+        - username
+        - password
+      properties:
+        name:
+          type: string
+          description: "Name of the user"
+        surname:
+          type: string
+          description: "Surname of the user"
+        email:
+          type: string
+          description: "Mail of the user"
+        username:
+          type: string
+          description: "Username of the user"
+        password:
+          type: string
+          description: "Hashed password of the user"
+    Admin:
+      type: object
+      required:
+        - adminId
+        - userId
+      properties:
+        adminId:
+          type: string
+          description: 'Id associated to the collection of admins'
+        userId:
+          type: string
+          description: 'Id of the user promoted to admin'
+    Report:
+      type: object
+      required:
+        - reportId
+        - activityId
+        - userId
+      properties:
+        reportId:
+          type: string
+        activityId:
+          type: string
+        userId:
+          type: string
+    Participation:
+      type: object
+      required:
+        - participationId
+        - activityId
+        - userId
+      properties:
+        participationId:
+          type: string
+        activityId:
+          type: string
+        userId:
+          type: string
