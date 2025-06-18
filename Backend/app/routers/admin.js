@@ -91,7 +91,8 @@ router.delete('/manageUsers/:id', async(req,res) =>{
         if(admin){
             return res.status(400).json({message: 'Non puoi eliminare un admin'});
         }
-        await Activity.deleteMany({ creator: userId });
+        username = User.findById(userId).select('username');
+        await Activity.deleteMany({ creator: username });
         await user.deleteOne()
         res.status(200).json({ message: 'Utente eliminato con successo'});
     } catch(err){
