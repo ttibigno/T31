@@ -5,27 +5,44 @@
       
       <!-- Lista delle attività -->
       <div v-if="activitiesReported.length">
-        <ul class="space-y-4">
-          <li v-for="(activity, index) in activitiesReported" :key="index" class="p-4 border-b flex justify-between items-center">
-            <div>
-              <h3 class="font-semibold text-xl">{{ activity.name }}</h3>
-              <p>Data: {{ activity.date }}</p>
-              <p>Creator: {{ activity.creator }}</p>
-              <p>Segnalazioni: {{ activity.warnings }}</p>
-            </div>
-            <button 
-              @click="deleteActivity(activity._id)" 
-              class="bg-red-600 text-white px-3 py-1 font-semibold rounded hover:bg-red-700"
-            >
-              Elimina
-            </button>
-          </li>
-        </ul>
+        <div class="max-h-96 overflow-y-auto border rounded">
+          <table class="min-w-full table-auto">
+            <thead class="bg-gray-100 sticky top-0 z-10">
+              <tr>
+                <th class="text-left px-4 py-2">Nome</th>
+                <th class="text-left px-4 py-2">Data</th>
+                <th class="text-left px-4 py-2">Creatore</th>
+                <th class="text-left px-4 py-2">Segnalazioni</th>
+                <th class="text-left px-4 py-2">Azioni</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr 
+                v-for="(activity, index) in activitiesReported" 
+                :key="index" 
+                class="border-t"
+              >
+                <td class="px-4 py-2 font-semibold">{{ activity.name }}</td>
+                <td class="px-4 py-2">{{ activity.date }}</td>
+                <td class="px-4 py-2">{{ activity.creator }}</td>
+                <td class="px-4 py-2">{{ activity.warnings }}</td>
+                <td class="px-4 py-2">
+                  <button 
+                    @click="deleteActivity(activity._id)" 
+                    class="bg-red-600 text-white px-3 py-1 font-semibold rounded hover:bg-red-700"
+                  >
+                    Elimina
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div v-else>
         <p>Nessuna attività segnalata.</p>
       </div>
-    </div>
+  </div>
     <!-- Div a sinistra con la lista utenti -->
     <div class="w-1/3 bg-white p-4 border border-gray-200 rounded shadow-md">
       <input
@@ -372,7 +389,7 @@ export default {
 
 
   async deleteActivity(activityId) {
-      const confirmed = confirm("Continuare con l'eliminazione dell'utente ?");
+      const confirmed = confirm("Continuare con l'eliminazione dell'attività ?");
 
       if(!confirmed){
         return;
