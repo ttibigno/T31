@@ -1,5 +1,5 @@
-# AroundYou 
-![Alt text](/home/daniele/Scaricati/AroundYou.jpeg)
+# AroundYou ![AroundYou](https://github.com/user-attachments/assets/4a1b579c-f557-4bb8-b1a9-ca5b359c500b)
+
 AroundYou is a web application developed as part of the Software Engineering course at the University of Trento. The main goal of the project is to simplify the discovery and organization of events and activities within the city of Trento, promoting local engagement and community participation.
 The platform is designed for two types of users: Citizens, who can explore, join, and create activities and Municipal operators, who can manage public events and view statistcs
 
